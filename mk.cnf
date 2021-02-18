@@ -1,0 +1,107 @@
+#----------------------------------------
+# Makefile make config
+#----------------------------------------
+PROJECT=OPAL_DEBUG OPAL_HEAP _XM_NO_INTRINSICS_ _WIN32_WINNT=0x601 OPAL_DX11
+
+OPAL=../../../Opal
+
+INCPATH=@/Inc
+LIBPATH=@/Obj
+
+INCLUDE=\
+@ @/Etc @/Lib @/Sys @/Usr Inc/ Lib/	\
+@/Usr/Draw	\
+@/Usr/Draw/prim	\
+@/Usr/Draw/rsrc	\
+@/Usr/Call	\
+@/Usr/Call/prim	\
+@/Usr/Call/rsrc	\
+C:/MinGW/include/				\
+C:/MinGW/include/DirectX		\
+C:/MinGW/include/DirectX/TX		\
+C:/MinGW/include/DirectX/TK		\
+C:/MinGW/include/DirectX/Math	\
+@/../Lib/Game \
+@/../Lib/Game/Scene \
+@/../Lib/Game/Actor \
+@/../Lib/Game/fsm \
+@/../Lib/Game/promoter \
+
+LIBRARY=\
+uuid ole32 winmm dxguid $(PAD) $(DRAW) $(CALL) strmiids dxerr9 \
+quartz WSock32 imm32 user32 gdi32 rpcrt4 oleaut32 ws2_32 shlwapi \
+windowscodecs
+
+$PAD =dinput8 xinput
+$DRAW=d3d9 d3dx9_43 d3d11 d3dcompiler_47
+$CALL=dsound
+
+=ms COMPILE =/Wall /WX /Wv:18 /O2 /std:c++20
+!ms COMPILE =-Wall -Werror -std=c++2a -g
+LINKAGE =
+
+#----------------------------------------
+# Main
+#----------------------------------------
+Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
+#RES=opal.rc
+	main.cpp
+	game.cpp
+	resource.cpp
+
+	0_title {
+		scene_main.cpp
+		scene_game.cpp
+	}
+
+	1_game {
+		scene_main.cpp
+		scene_game.cpp
+
+		scene_camera.cpp
+		camera_x.cpp
+		camera_p.cpp
+
+		scene_grid.cpp
+		grid_m.cpp
+		grid_v.cpp
+		grid_r.cpp
+		grid_d.cpp
+
+		actor_x.cpp
+		actor_a.cpp
+
+		scene_player.cpp
+		player_x.cpp
+		player_v.cpp
+		player_m.cpp
+		player_r.cpp
+		player_d.cpp
+
+		scene_enemy.cpp
+		enemy_x.cpp
+		enemy_m.cpp
+		enemy_r.cpp
+		enemy_d.cpp
+
+		enemy {	-I1_game/
+			mummy.cpp
+		}
+
+		scene_spell.cpp
+		spell_x.cpp
+		spell_m.cpp
+		spell_r.cpp
+		spell_d.cpp
+		spell {	-I1_game/
+			fireball.cpp
+			fireball_v.cpp
+		}
+
+		map.cpp
+		map_data.cpp
+		map {	-I1_game/
+		}
+	}
+
+__END__
