@@ -10,9 +10,7 @@
 //----------------------------------------
 class SPELL_C :
 	public ACTOR_C<ACTOR_A_MOVE>
-{
-	using ACTOR_C::ACTOR_C;
-};
+{};
 
 class SPELL_X :
 	public ACTOR_X,

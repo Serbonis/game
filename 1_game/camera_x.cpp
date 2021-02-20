@@ -66,15 +66,15 @@ auto CAMERA_X::GetZoom( void ) const->float{ return camera.GetFov();		}
 
 void CAMERA_X::ObjFunc( void ){
 
-	printd( "CAMERA\n" );
-	printd( "H[R/F] : %f\n", GetArmH() );
-	printd( "V[T/G] : %f\n", GetArmV() );
-	printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );
-	printd( "P[U/I] : %f\n", DEG( GetPan()  ) );
-	printd( "Z[J/K] : %f\n", GetZoom() );
-	printd( "\n" );
-
 	if ( PADX::KeyPush( KEY_LSHIFT ) ) {
+		printd( "CAMERA\n" );
+		printd( "H[R/F] : %f\n", GetArmH() );
+		printd( "V[T/G] : %f\n", GetArmV() );
+		printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );
+		printd( "P[U/I] : %f\n", DEG( GetPan()  ) );
+		printd( "Z[J/K] : %f\n", GetZoom() );
+		printd( "\n" );
+
 		const auto	ms = 0.04f;
 		const auto	rs = RAD( 4.0f );
 		const auto	zs = 0.01f;

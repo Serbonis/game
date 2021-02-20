@@ -14,7 +14,7 @@ using namespace opal;
 SPELL_X::SPELL_X( SPELL_KIND k, void* g ) :
 	ACTOR_X{g},
 	SPELL_M{k},
-	SPELL_C{this}
+	SPELL_C{}
 {}
 
 //----------------------------------------

@@ -14,7 +14,7 @@ using namespace opal;
 ENEMY_X::ENEMY_X( ENEMY_KIND k, void* g ) :
 	ACTOR_X{g},
 	ENEMY_M{k},
-	ENEMY_C{this}
+	ENEMY_C{}
 {}
 
 //----------------------------------------
@@ -26,6 +26,8 @@ void ENEMY_X::Init( const char* p ){
 	PRIMS::MakeSharedPrim( view );
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
+
+	ATARIC::SetAtariFuncOn( ATARI_BIND( this, &ENEMY_X::atari_func ) );
 }
 
 //----------------------------------------
@@ -33,6 +35,14 @@ void ENEMY_X::Init( const char* p ){
 void ENEMY_X::Free( void ){
 
 	ACTOR_X::Free();
+}
+
+//----------------------------------------
+//----------------------------------------
+void ENEMY_X::atari_func( const std::string& as,const ATARIC* ac,
+						  const std::string& bs,const ATARIC* bc ){
+
+	Kill( 0 );
 }
 
 //----------------------------------------

@@ -23,9 +23,13 @@ void ACTOR_X::Init( const char* p ){
 
 	ACTOR::Init( p );
 	SetDim3( true );
+
+	ATARIC::AtariInit();
 }
 
 void ACTOR_X::Free( void ){
+
+	ATARIC::AtariFree();
 
 	ACTOR::Free();
 }

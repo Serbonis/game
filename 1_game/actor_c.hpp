@@ -9,11 +9,8 @@
 //----------------------------------------
 class ACTOR_X;
 template<typename... TYPE>class ACTOR_C : public TYPE... {
-private:
-	explicit ACTOR_C() = delete;
-
 public:
-	explicit ACTOR_C( ACTOR_X* a ) : TYPE{a}...{}
+	explicit ACTOR_C( ACTOR_X* a = nullptr ) : TYPE{a}...{}
 	virtual ~ACTOR_C() = default;
 
 private:
@@ -36,7 +33,7 @@ private:
 	explicit ACTOR_C() = delete;
 
 public:
-	explicit ACTOR_C( ACTOR_X* a ){}
+	explicit ACTOR_C( ACTOR_X* a = nullptr ){}
 	virtual ~ACTOR_C() = default;
 
     virtual void Updater( ACTOR_X* a ) final {}

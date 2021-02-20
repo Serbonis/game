@@ -21,11 +21,17 @@ void PLAYER_X::Init( const char* p ){
 	SetTurnSpeed( RAD( 4.0f ) );
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
+
+	AtariBody<PLAYER_V>( this, 2, 2 );
+
+	ATARIC::SetAtariFuncOn( [&]( auto as, auto ac, auto bs, auto bc ){ printd( "hit player" ); } );
 }
 
 //----------------------------------------
 //----------------------------------------
 void PLAYER_X::Free( void ){
+
+	ATARIC::AtariDestroy();
 
 	SetView();
 

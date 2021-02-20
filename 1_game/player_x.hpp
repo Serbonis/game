@@ -10,9 +10,7 @@
 //----------------------------------------
 class PLAYER_C :
 	public ACTOR_C<ACTOR_A_MOVE,ACTOR_A_TURN,ACTOR_A_JUMP>
-{
-	using ACTOR_C::ACTOR_C;
-};
+{};
 
 class PLAYER_X :
 	public ACTOR_X,
@@ -20,7 +18,7 @@ class PLAYER_X :
 	public PLAYER_C
 {
 public:
-	explicit PLAYER_X() : PLAYER_C{this} {}
+	explicit PLAYER_X() = default;
 	virtual ~PLAYER_X() = default;
 
 public:

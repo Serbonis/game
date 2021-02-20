@@ -23,6 +23,8 @@ void SCENE_PLAYER::Init( const char* p ){
 
 	PRIMS::MakeSharedPrim( player );
 	player->SetTexture( RESOURCE::PLAYER::Texture() );
+
+	Game::AtariRegister( "PLAYER", player );
 }
 
 void SCENE_PLAYER::Free( void ){

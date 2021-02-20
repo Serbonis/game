@@ -1,23 +1,28 @@
 #pragma once
 //========================================
-// actor_x.hpp
+// aobj_cylinder.hpp
 //========================================
-#include "actor.hpp"
+#include "line3.hpp"
+#include "maru3.hpp"
 
 //----------------------------------------
-// ACTOR_V
+// AOBJ_CYLINDER
 //----------------------------------------
-class ACTOR_V : public ACTOR_VIEW{
-protected:
-	std::shared_ptr<class ACTOR_SHADOW>	shadow;
-	std::shared_ptr<class ACTOR_AOBJ>	aobj;
+class AOBJ_CYLINDER : public opal::DRAWL {
+private:
+	LINE3	height;
+	MARU3	bottom;
 
 public:
 	virtual void Init( const char* = nullptr ) override;
 	virtual void Free( void ) override;
 
 public:
-	virtual void Aobject( class ACTOR_X*, const class ATARIO*, opal::COLOR = opal::RED ) final;
+	virtual void SetColor( opal::COLOR );
+
+public:
+	virtual void SetHeight( float );
+	virtual void SetBottom( float );
 };
 
 // End Of File

@@ -12,12 +12,13 @@
 //----------------------------------------
 class PLAYER_V final : public ACTOR_V {
 private:
-	RECT3	rect3;
+	RECT3			rect3;
 
 public:
 	void Init( const char* = nullptr ) override;
 	void Free( void ) override;
 
+public:
 	void SetTexture( const TEXTURE*, std::shared_ptr<opal::SRECTF> = nullptr );
 };
 

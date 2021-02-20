@@ -26,6 +26,7 @@ C:/MinGW/include/DirectX/Math	\
 @/../Lib/Game/Actor \
 @/../Lib/Game/fsm \
 @/../Lib/Game/promoter \
+@/../Lib/Game/atari \
 
 LIBRARY=\
 uuid ole32 winmm dxguid $(PAD) $(DRAW) $(CALL) strmiids dxerr9 \
@@ -69,7 +70,11 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		grid_d.cpp
 
 		actor_x.cpp
+		actor_v.cpp
 		actor_a.cpp
+
+		aobj.cpp
+		aobj_cylinder.cpp
 
 		scene_player.cpp
 		player_x.cpp

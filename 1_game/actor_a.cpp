@@ -26,9 +26,20 @@ ACTOR_A::~ACTOR_A()
 	FSM::FreeFSM();
 }
 
+//----------------------------------------
+// Actor
+//----------------------------------------
+void ACTOR_A::SetMyActor( ACTOR_X* a ){ actor = a;	}
+auto ACTOR_A::GetMyActor( void ) const->ACTOR_X*{ return actor;	}
+
+//----------------------------------------
+// Updater
+//----------------------------------------
 void ACTOR_A::Updater( ACTOR_X* a ){
 
-	FSM::ExecFSM( a );
+	if ( actor != a ) { actor = a; }
+
+	FSM::ExecFSM( actor );
 }
 
 //----------------------------------------

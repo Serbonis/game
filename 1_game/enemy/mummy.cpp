@@ -32,6 +32,8 @@ void ENEMY_MUMMY::Init( const char* p ){
 
 	ACTOR_A_MOVE::SetAction<FSM_MUMMY>( "fsm", FSM_BIND( this, &ENEMY_MUMMY::fsm_move ) );
 	SetUpdater( "MUMMY_C", [&]{ MUMMY_C::Updater( this ); } );
+
+	AtariBody<MUMMY_V>( this, 2, 2 );
 }
 
 void ENEMY_MUMMY::Free( void ){
@@ -52,16 +54,12 @@ void ENEMY_MUMMY::SetTexture( const class TEXTURE* t, std::shared_ptr<opal::SREC
 //----------------------------------------
 auto ENEMY_MUMMY::fsm_move( FSM_ARGP )->FSM_RETV{
 
-	printd( "move\n" );
-
 	return FSM_CONTINUE();
 }
 
 //----------------------------------------
 //----------------------------------------
 auto ENEMY_MUMMY::fsm_past( FSM_ARGP )->FSM_RETV{
-
-	printd( "past\n" );
 
 	return FSM_CONTINUE();
 }

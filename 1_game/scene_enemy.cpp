@@ -35,10 +35,8 @@ void SCENE_ENEMY::Free( void ){
 
 void SCENE_ENEMY::ObjFunc( void ){
 
-	for ( auto& [p,m] : enemy.Update() ) {
-		printd( "ENEMY %s\n", p->GetName() );
-	}
-	printd( "\n" );
+	//for ( auto& [p,m] : enemy.Update() ) { printd( "ENEMY %s\n", p->GetName() ); }
+	//printd( "\n" );
 }
 
 //----------------------------------------
@@ -51,6 +49,7 @@ auto SCENE_ENEMY::Generate( ENEMY_KIND k )->std::shared_ptr<ENEMY_X>{
 		p->Open();
 		p->SetName( Name( k ) );
 		p->SetTexture( RESOURCE::ENEMY::Texture( p->Kind() ) );
+		Game::AtariRegister( "ENEMY", p );
 		return p;
 	}
 	return nullptr;

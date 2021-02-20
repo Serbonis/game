@@ -9,6 +9,8 @@
 #include "scene_spell.hpp"
 #include "scene_grid.hpp"
 
+#include "atari.hpp"
+
 //----------------------------------------
 // SCENE GAME
 //----------------------------------------
@@ -33,6 +35,13 @@ SCENE_G::SCENE_G() :
 {
 	game	= this;
 
+	atari = std::shared_ptr<ATARIS>( SRVCS::Generate<ATARIS>( "ATARI" ), [](auto){ SRVCS::Destroy( "ATARI" ); } );
+	atari->Begin();
+	atari->Create( "P_SHOT","E_SHOT" );
+	atari->Create( "P_SHOT","ENEMY"  );
+	atari->Create( "PLAYER","ENEMY"  );
+	atari->Create( "PLAYER","E_SHOT" );
+
 	camera->Open( "CAMERA" );
 	player->Open( "PLAYER" );
 	enemy->Open( "ENEMY" );
@@ -52,12 +61,18 @@ SCENE_G::~SCENE_G()
 	enemy->Close();
 	player->Close();
 	camera->Close();
+
+	atari->Destroy();
+	atari->End();
+	atari = nullptr;
 }
 
 //----------------------------------------
 // ŽÀs
 //----------------------------------------
 bool SCENE_G::operator()( SCENE_MANAGER* ){
+
+	atari->Debug();
 
 	switch ( step ) {
 	case 0:
@@ -217,5 +232,12 @@ bool SCENE_G::GenerateSpell( const SPELL_DATA& d ){
 
 	return game->spell->Generate( d ) ? true : false;
 }
+
+//----------------------------------------
+//----------------------------------------
+#include "actor_x.hpp"
+
+void SCENE_G::AtariRegister( const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->Register( s, p );	}
+void SCENE_G::AtariRelease(  const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->Release(  s, p );	}
 
 // End Of File

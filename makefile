@@ -16,7 +16,7 @@ CPPFLAGS := -Wall -Werror -std=c++2a -g  -DOPAL_DEBUG -DOPAL_HEAP -D_XM_NO_INTRI
 LDFLAGS  := 
 FXFLAGS  := /nologo /Gfp /Ges
 
-INCPATH := -iquote -I-  -I../../../Opal/Inc -I../../../Opal/Inc/Etc -I../../../Opal/Inc/Lib -I../../../Opal/Inc/Sys -I../../../Opal/Inc/Usr -IInc/ -ILib/ -I../../../Opal/Inc/Usr/Draw -I../../../Opal/Inc/Usr/Draw/prim -I../../../Opal/Inc/Usr/Draw/rsrc -I../../../Opal/Inc/Usr/Call -I../../../Opal/Inc/Usr/Call/prim -I../../../Opal/Inc/Usr/Call/rsrc -IC:/MinGW/include/ -IC:/MinGW/include/DirectX -IC:/MinGW/include/DirectX/TX -IC:/MinGW/include/DirectX/TK -IC:/MinGW/include/DirectX/Math -I../../../Opal/Inc/../Lib/Game -I../../../Opal/Inc/../Lib/Game/Scene -I../../../Opal/Inc/../Lib/Game/Actor -I../../../Opal/Inc/../Lib/Game/fsm -I../../../Opal/Inc/../Lib/Game/promoter -I.
+INCPATH := -iquote -I-  -I../../../Opal/Inc -I../../../Opal/Inc/Etc -I../../../Opal/Inc/Lib -I../../../Opal/Inc/Sys -I../../../Opal/Inc/Usr -IInc/ -ILib/ -I../../../Opal/Inc/Usr/Draw -I../../../Opal/Inc/Usr/Draw/prim -I../../../Opal/Inc/Usr/Draw/rsrc -I../../../Opal/Inc/Usr/Call -I../../../Opal/Inc/Usr/Call/prim -I../../../Opal/Inc/Usr/Call/rsrc -IC:/MinGW/include/ -IC:/MinGW/include/DirectX -IC:/MinGW/include/DirectX/TX -IC:/MinGW/include/DirectX/TK -IC:/MinGW/include/DirectX/Math -I../../../Opal/Inc/../Lib/Game -I../../../Opal/Inc/../Lib/Game/Scene -I../../../Opal/Inc/../Lib/Game/Actor -I../../../Opal/Inc/../Lib/Game/fsm -I../../../Opal/Inc/../Lib/Game/promoter -I../../../Opal/Inc/../Lib/Game/atari -I.
 LIBRARY := -luuid -lole32 -lwinmm -ldxguid $(foreach lib,$(PAD),-l$(lib)) $(foreach lib,$(DRAW),-l$(lib)) $(foreach lib,$(CALL),-l$(lib)) -lstrmiids -ldxerr9 -lquartz -lWSock32 -limm32 -luser32 -lgdi32 -lrpcrt4 -loleaut32 -lws2_32 -lshlwapi -lwindowscodecs 
 DYNAMIC := 
 
@@ -33,7 +33,7 @@ exe:$(EXES)
 #----------------------------------------
 # Exe/main.exe
 #----------------------------------------
-EXE000_DEPEND := Obj/main.o Obj/game.o Obj/resource.o Obj/0_title/scene_main.o Obj/0_title/scene_game.o Obj/1_game/scene_main.o Obj/1_game/scene_game.o Obj/1_game/scene_camera.o Obj/1_game/camera_x.o Obj/1_game/camera_p.o Obj/1_game/scene_grid.o Obj/1_game/grid_m.o Obj/1_game/grid_v.o Obj/1_game/grid_r.o Obj/1_game/grid_d.o Obj/1_game/actor_x.o Obj/1_game/actor_a.o Obj/1_game/scene_player.o Obj/1_game/player_x.o Obj/1_game/player_v.o Obj/1_game/player_m.o Obj/1_game/player_r.o Obj/1_game/player_d.o Obj/1_game/scene_enemy.o Obj/1_game/enemy_x.o Obj/1_game/enemy_m.o Obj/1_game/enemy_r.o Obj/1_game/enemy_d.o Obj/1_game/enemy/mummy.o Obj/1_game/scene_spell.o Obj/1_game/spell_x.o Obj/1_game/spell_m.o Obj/1_game/spell_r.o Obj/1_game/spell_d.o Obj/1_game/spell/fireball.o Obj/1_game/spell/fireball_v.o Obj/1_game/map.o Obj/1_game/map_data.o
+EXE000_DEPEND := Obj/main.o Obj/game.o Obj/resource.o Obj/0_title/scene_main.o Obj/0_title/scene_game.o Obj/1_game/scene_main.o Obj/1_game/scene_game.o Obj/1_game/scene_camera.o Obj/1_game/camera_x.o Obj/1_game/camera_p.o Obj/1_game/scene_grid.o Obj/1_game/grid_m.o Obj/1_game/grid_v.o Obj/1_game/grid_r.o Obj/1_game/grid_d.o Obj/1_game/actor_x.o Obj/1_game/actor_v.o Obj/1_game/actor_a.o Obj/1_game/aobj.o Obj/1_game/aobj_cylinder.o Obj/1_game/scene_player.o Obj/1_game/player_x.o Obj/1_game/player_v.o Obj/1_game/player_m.o Obj/1_game/player_r.o Obj/1_game/player_d.o Obj/1_game/scene_enemy.o Obj/1_game/enemy_x.o Obj/1_game/enemy_m.o Obj/1_game/enemy_r.o Obj/1_game/enemy_d.o Obj/1_game/enemy/mummy.o Obj/1_game/scene_spell.o Obj/1_game/spell_x.o Obj/1_game/spell_m.o Obj/1_game/spell_r.o Obj/1_game/spell_d.o Obj/1_game/spell/fireball.o Obj/1_game/spell/fireball_v.o Obj/1_game/map.o Obj/1_game/map_data.o
 
 EXE000_OBJECT := ${filter %.o %.ro, $(EXE000_DEPEND)}
 Exe/main.exe:$(EXE000_DEPEND) 
@@ -104,7 +104,19 @@ Obj/1_game/actor_x.o:1_game/actor_x.cpp
 	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
 	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
 
+Obj/1_game/actor_v.o:1_game/actor_v.cpp 
+	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
+	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
+
 Obj/1_game/actor_a.o:1_game/actor_a.cpp 
+	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
+	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
+
+Obj/1_game/aobj.o:1_game/aobj.cpp 
+	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
+	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
+
+Obj/1_game/aobj_cylinder.o:1_game/aobj_cylinder.cpp 
 	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
 	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
 

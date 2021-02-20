@@ -9,15 +9,16 @@
 //----------------------------------------
 class ACTOR_X;
 class ACTOR_A : public FSM {
-private:
-	explicit ACTOR_A() = delete;
-
 public:
-	explicit ACTOR_A( ACTOR_X* );
+	explicit ACTOR_A( ACTOR_X* = nullptr );
 	virtual ~ACTOR_A();
 
 protected:
-	ACTOR_X* const actor;
+	ACTOR_X* actor;
+
+public:
+	virtual void SetMyActor( ACTOR_X* ) final;
+	virtual auto GetMyActor( void ) const->ACTOR_X* final;
 
 public:
 	virtual void Updater( ACTOR_X* );

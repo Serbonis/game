@@ -13,6 +13,9 @@ class SCENE_ENEMY;
 class SCENE_SPELL;
 class SCENE_GRID;
 
+class ATARIS;
+class ACTOR_X;
+
 class SPELL_DATA;
 struct MAP_DATA;
 
@@ -47,6 +50,9 @@ namespace SCENE_GAME {
 		std::shared_ptr<SCENE_GRID>		grid;
 
 	private:
+		std::shared_ptr<ATARIS>			atari;
+
+	private:
 		static constexpr float	GRID_SIZE = 9.6f;
 
 	public:
@@ -62,6 +68,10 @@ namespace SCENE_GAME {
 
 	public:
 		static bool GenerateSpell( const SPELL_DATA& );
+
+	public:
+		static void AtariRegister( const char*, std::shared_ptr<ACTOR_X> );
+		static void AtariRelease(  const char*, std::shared_ptr<ACTOR_X> );
 	};
 }
 
