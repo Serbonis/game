@@ -48,7 +48,9 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 #RES=opal.rc
 	main.cpp
 	game.cpp
+
 	resource.cpp
+	controll.cpp
 
 	0_title {
 		scene_main.cpp

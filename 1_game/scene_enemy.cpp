@@ -35,8 +35,10 @@ void SCENE_ENEMY::Free( void ){
 
 void SCENE_ENEMY::ObjFunc( void ){
 
-	//for ( auto& [p,m] : enemy.Update() ) { printd( "ENEMY %s\n", p->GetName() ); }
-	//printd( "\n" );
+	for ( auto& [p,m] : enemy.Update() ) {
+		( void )p;
+		( void )m;
+	}
 }
 
 //----------------------------------------

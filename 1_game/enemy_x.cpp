@@ -27,6 +27,7 @@ void ENEMY_X::Init( const char* p ){
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
 
+	ATARIC::SetAtariOwner( this );
 	ATARIC::SetAtariFuncOn( ATARI_BIND( this, &ENEMY_X::atari_func ) );
 }
 

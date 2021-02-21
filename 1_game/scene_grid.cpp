@@ -25,8 +25,6 @@ void SCENE_GRID::Init( const char* p ){
 
 	makeshared( grid );
 
-	size = {};
-
 	Generate();
 }
 
@@ -49,10 +47,6 @@ void SCENE_GRID::ObjFunc( void ){}
 //
 //----------------------------------------
 void SCENE_GRID::Generate( SSIZE2U s ){
-
-	if ( !grid ) { return; }
-
-	Destroy();
 
 	size = s;
 
@@ -78,7 +72,7 @@ void SCENE_GRID::Generate( UINT w, UINT h ){
 
 void SCENE_GRID::Destroy( void ){
 
-	if ( !grid ) { return;	}
+	printf( "destroy\n" );
 
 	for ( auto& l : *grid ) {
 		for ( auto& g : l ) {
@@ -86,6 +80,9 @@ void SCENE_GRID::Destroy( void ){
 		}
 		l.clear();
 	}
+	grid->clear();
+
+	size = {};
 }
 
 //----------------------------------------

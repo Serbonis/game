@@ -20,11 +20,16 @@ namespace {
 	SCENE_G*	game;
 }
 
+#if OPAL_DEBUG
+static bool	debug_flag;
+#endif
+
 //----------------------------------------
 // èâä˙âª
 //----------------------------------------
 SCENE_G::SCENE_G() :
 	step{0},
+	level{0},
 	size{0,0},
 	atari{ std::make_shared<SCENE_ATARI>() },
 	camera{std::make_shared<SCENE_CAMERA>()},
@@ -43,6 +48,10 @@ SCENE_G::SCENE_G() :
 	grid->Open(   "GRID"   );
 
 	camera->SetConnect( player->GetConnect() );
+
+#if OPAL_DEBUG
+	debug_flag = true;
+#endif
 }
 
 //----------------------------------------
@@ -61,21 +70,40 @@ SCENE_G::~SCENE_G()
 //----------------------------------------
 // é¿çs
 //----------------------------------------
+#if OPAL_DEBUG
+#include "controll.hpp"
+#endif
 bool SCENE_G::operator()( SCENE_MANAGER* ){
 
 	switch ( step ) {
 	case 0:
-		GenerateMap();
+		GenerateMap( level );
 		step++;
 		break;
 
 	case 1:
-		if ( PADX::KeyTrig( KEY_P ) ) {
+		if ( CONTROLL::RestartMap() ) {
+			level = (level+1)%2;
 			DestroyMap();
 			step = 0;
 		}
 		break;
 	}
+
+#if OPAL_DEBUG
+	if ( CONTROLL::GameDebug() ) {
+		FLAG_CTRL( debug_flag, FLAG_FLIP );
+	}
+
+	if ( debug_flag ) {
+		printd( "========================================\n" );
+		printd( "= GAME\n" );
+		printd( "========================================\n" );
+		printd( "LEVEL : %d\n", level );
+		printd( "SIZE  : %02d %02d\n", size.w, size.h );
+		printd( "\n" );
+	}
+#endif
 
 	return false;
 }

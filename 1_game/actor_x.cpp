@@ -52,7 +52,7 @@ void ACTOR_X::SetPosition( float x, float z ){
 void ACTOR_X::SetDirection( float d ){
 
 	ACTOR_M::SetDirection( d );
-	SetRotate( Dix2Rad( d ) );
+	SetRotate( d );
 }
 
 void ACTOR_X::SetPosition( void ){

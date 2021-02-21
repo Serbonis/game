@@ -26,6 +26,8 @@ void SPELL_X::Init( const char* p ){
 	PRIMS::MakeSharedPrim( view );
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
+
+	ATARIC::SetAtariOwner( this );
 }
 
 //----------------------------------------

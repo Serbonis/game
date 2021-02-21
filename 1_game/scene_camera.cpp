@@ -36,8 +36,9 @@ void SCENE_CAMERA::Init( const char* p ){
 	makeshared( handy );
 
 	handy->Open( "HANDY" );
-	handy->SetArmV( +s/2 );
-	handy->SetArmH( -s/2 );
+	handy->SetTilt( RAD( 90.f ) );
+	handy->SetArmV( s * 8 );
+	handy->Parent( platform );
 
 	number = 0;
 }
@@ -55,13 +56,18 @@ void SCENE_CAMERA::Free( void ){
 	WORKL::Free();
 }
 
+//----------------------------------------
+//----------------------------------------
+#if OPAL_DEBUG
+#include "controll.hpp"
+#endif
 void SCENE_CAMERA::ObjFunc( void ){
 #if OPAL_DEBUG
-	if ( PADX::KeyTrig( KEY_RSHIFT ) ) {
+	if ( CONTROLL::CameraChange() ) {
 		SetCamera();
 	}
 
-	if ( PADX::KeyPush( KEY_LSHIFT ) ) {
+	if ( CONTROLL::CameraDebug() ) {
 		switch ( number ) {
 		case 0: camera->Debug();	break;
 		case 1: handy->Debug();		break;
@@ -99,7 +105,6 @@ auto SCENE_CAMERA::GetCamera( void ) const->UINT{ return number;	}
 void SCENE_CAMERA::SetPosition( int x, int y ){
 
 	Game::SetPosition( platform, x, y );
-	Game::SetPosition( handy, x, y );
 
 	*platform = Game::MapPoint( Game::MapPosition( x, y ) );
 }
@@ -107,7 +112,6 @@ void SCENE_CAMERA::SetPosition( int x, int y ){
 void SCENE_CAMERA::SetDirection( int d ){
 
 	Game::SetDirection( platform, d );
-	Game::SetDirection( handy, Game::MapDirection( d-1 ) );
 }
 
 // End Of File

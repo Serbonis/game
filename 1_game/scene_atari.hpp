@@ -11,6 +11,12 @@
 class ACTOR_X;
 class SCENE_ATARI final : public opal::WORKL {
 public:
+	static inline const std::string	PLAYER = "PLAYER";
+	static inline const std::string	ENEMY  = "ENEMY";
+	static inline const std::string	P_SHOT = "P_SHOT";
+	static inline const std::string	E_SHOT = "E_SHOT";
+
+public:
 	void Init( const char* = nullptr ) override;
 	void Free( void ) override;
 

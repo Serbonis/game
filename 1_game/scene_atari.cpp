@@ -9,6 +9,10 @@
 //----------------------------------------
 using namespace opal;
 
+#if OPAL_DEBUG
+static bool	debug_flag;
+#endif
+
 //----------------------------------------
 //
 //----------------------------------------
@@ -18,10 +22,14 @@ void SCENE_ATARI::Init( const char* p ){
 
 	server = std::shared_ptr<ATARIS>( SRVCS::Generate<ATARIS>( "ATARI" ), [](auto){ SRVCS::Destroy( "ATARI" ); } );
 	server->Begin();
-	server->Create( "P_SHOT","E_SHOT" );
-	server->Create( "P_SHOT","ENEMY"  );
-	server->Create( "PLAYER","ENEMY"  );
-	server->Create( "PLAYER","E_SHOT" );
+	server->Create( P_SHOT, E_SHOT );
+	server->Create( P_SHOT, ENEMY  );
+	server->Create( PLAYER, ENEMY  );
+	server->Create( PLAYER, E_SHOT );
+
+#if OPAL_DEBUG
+	debug_flag = true;
+#endif
 }
 
 void SCENE_ATARI::Free( void ){
@@ -33,11 +41,25 @@ void SCENE_ATARI::Free( void ){
 	WORKL::Free();
 }
 
+//----------------------------------------
+//----------------------------------------
+#if OPAL_DEBUG
+#include "controll.hpp"
+#endif
 void SCENE_ATARI::ObjFunc( void ){
+#if OPAL_DEBUG
+	if ( CONTROLL::AtariDebug() ) {
+		FLAG_CTRL( debug_flag, FLAG_FLIP );
+	}
 
-	server->Debug();
+	if ( debug_flag ) {
+		server->Debug();
+	}
+#endif
 }
 
+//----------------------------------------
+//----------------------------------------
 #include "actor_x.hpp"
 
 void SCENE_ATARI::AtariRegister( const char* s, std::shared_ptr<ACTOR_X> p ){ server->Register( s, p );	}

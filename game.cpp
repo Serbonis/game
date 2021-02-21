@@ -13,6 +13,10 @@
 //----------------------------------------
 using namespace opal;
 
+#if OPAL_DEBUG
+static bool	debug_flag;
+#endif
+
 //----------------------------------------
 // 初期化
 //----------------------------------------
@@ -31,6 +35,10 @@ void GAME::SysInit( void ){
 	// シーン開始
 	//scene->Scene( "TITLE" );
 	scene->Scene( "GAME" );
+
+#if OPAL_DEBUG
+	debug_flag = false;
+#endif
 }
 
 //----------------------------------------
@@ -48,10 +56,21 @@ void GAME::SysFree( void ){
 //----------------------------------------
 // 実行
 //----------------------------------------
+#if OPAL_DEBUG
+#include "controll.hpp"
+#endif
 void GAME::SysExec( void ){
 
 	// シーンデバッグ
-	scene->Debug();
+#if OPAL_DEBUG
+	if ( CONTROLL::DebugScene() ) {
+		FLAG_CTRL( debug_flag, FLAG_FLIP );
+	}
+
+	if ( debug_flag ) {
+		scene->Debug();
+	}
+#endif
 }
 
 // End Of File

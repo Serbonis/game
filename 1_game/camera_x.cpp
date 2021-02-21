@@ -71,33 +71,12 @@ auto CAMERA_X::GetZoom( void ) const->float{ return camera.GetFov();		}
 //----------------------------------------
 //----------------------------------------
 #if OPAL_DEBUG
-#include "pad.hpp"
 #include "scene_game.hpp"
+#include "controll.hpp"
 
 void CAMERA_X::Debug( float ms, float rs, float zs ){
 
 	printd( "CAMERA : %s\n", GetName() );
-
-	if ( !Parent() ) {
-		const auto	t = GetTrans();
-		const auto	p = Game::MapPoint(  t );
-		const auto	v = Game::MapVector( p );
-
-		printd( "V2P [%02d,%02d]\n", p.x, p.y );
-		printd( "P2V [%f,%f]\n", v.x, v.z );
-		printd( "F[A/D] : %f, %f\n", t.x, t.z );
-		printd( "B[W/S] : %f\n", GetMoveSpeed() );
-		printd( "R[Q/E] : %f\n", DEG( GetRotateSpeed() ) );
-		printd( "H[SPC] : %f\n", t.y );
-
-		if ( PADX::KeyPush( KEY_W ) ) { MoveF();	}
-		if ( PADX::KeyPush( KEY_S ) ) { MoveB();	}
-		if ( PADX::KeyPush( KEY_A ) ) { MoveL();	}
-		if ( PADX::KeyPush( KEY_D ) ) { MoveR();	}
-		if ( PADX::KeyTrig( KEY_Q ) ) { RotateL(); 	}
-		if ( PADX::KeyTrig( KEY_E ) ) { RotateR(); 	}
-	}
-
 	printd( "H[R/F] : %f\n", GetArmH() );
 	printd( "V[T/G] : %f\n", GetArmV() );
 	printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );
@@ -105,18 +84,16 @@ void CAMERA_X::Debug( float ms, float rs, float zs ){
 	printd( "Z[J/K] : %f\n", GetZoom() );
 	printd( "\n" );
 
-	if ( PADX::KeyPush( KEY_R ) ) { AddArmH( +ms ); }
-	if ( PADX::KeyPush( KEY_F ) ) { AddArmH( -ms ); }
-	if ( PADX::KeyPush( KEY_T ) ) { AddArmV( +ms ); }
-	if ( PADX::KeyPush( KEY_G ) ) { AddArmV( -ms ); }
-
-	if ( PADX::KeyPush( KEY_Y ) ) { AddTilt( +rs ); }
-	if ( PADX::KeyPush( KEY_H ) ) { AddTilt( -rs ); }
-	if ( PADX::KeyPush( KEY_U ) ) { AddPan(  +rs ); }
-	if ( PADX::KeyPush( KEY_I ) ) { AddPan(  -rs ); }
-
-	if ( PADX::KeyPush( KEY_J ) ) { AddZoom( +zs ); }
-	if ( PADX::KeyPush( KEY_K ) ) { AddZoom( -zs ); }
+	if ( CONTROLL::CameraAddArmH() ) { AddArmH( +ms ); }
+	if ( CONTROLL::CameraAddArmH() ) { AddArmH( -ms ); }
+	if ( CONTROLL::CameraAddArmV() ) { AddArmV( +ms ); }
+	if ( CONTROLL::CameraAddArmV() ) { AddArmV( -ms ); }
+	if ( CONTROLL::CameraAddTilt() ) { AddTilt( +rs ); }
+	if ( CONTROLL::CameraAddTilt() ) { AddTilt( -rs ); }
+	if ( CONTROLL::CameraAddPan()  ) { AddPan(  +rs ); }
+	if ( CONTROLL::CameraAddPan()  ) { AddPan(  -rs ); }
+	if ( CONTROLL::CameraAddZoom() ) { AddZoom( +zs ); }
+	if ( CONTROLL::CameraAddZoom() ) { AddZoom( -zs ); }
 }
 #endif
 

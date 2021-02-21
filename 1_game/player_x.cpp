@@ -28,6 +28,7 @@ void PLAYER_X::Init( const char* p ){
 
 	AtariBody<PLAYER_V>( this, 2, 2 );
 
+	ATARIC::SetAtariOwner( this );
 	ATARIC::SetAtariFuncOn( [&]( auto as, auto ac, auto bs, auto bc ){ printd( "hit player" ); } );
 }
 
@@ -74,12 +75,20 @@ void PLAYER_X::FireBall( void ){
 
 //----------------------------------------
 //----------------------------------------
-#include "pad.hpp"
+#if OPAL_DEBUG
 #include "scene_game.hpp"
+#endif
+
+#include "controll.hpp"
 
 void PLAYER_X::ObjFunc( void ){
 
-	if ( !PADX::KeyPush( KEY_LSHIFT ) ) {
+#if OPAL_DEBUG
+	if ( CONTROLL::CameraDebug() ) {
+		return;
+	}
+
+	if ( CONTROLL::PlayerDebug() ) {
 		const auto	t = GetTrans();
 		const auto	p = Game::MapPoint(  t );
 		const auto	v = Game::MapVector( p );
@@ -92,17 +101,18 @@ void PLAYER_X::ObjFunc( void ){
 		printd( "R[Q/E] : %f\n", DEG( GetTurnSpeed() ) );
 		printd( "H[SPC] : %f\n", t.y );
 		printd( "\n" );
-
-		if ( PADX::KeyPush( KEY_W ) ) { MoveF();	}
-		if ( PADX::KeyPush( KEY_S ) ) { MoveB();	}
-		if ( PADX::KeyPush( KEY_A ) ) { MoveL();	}
-		if ( PADX::KeyPush( KEY_D ) ) { MoveR();	}
-		if ( PADX::KeyTrig( KEY_Q ) ) { TurnL(); 	}
-		if ( PADX::KeyTrig( KEY_E ) ) { TurnR(); 	}
-
-		if ( PADX::KeyTrig( KEY_B ) ) { FireBall();	}
-		if ( PADX::KeyPush( KEY_SPACE ) ) { Jump();	}
 	}
+#endif
+
+	if ( CONTROLL::PlayerMoveF() ) { MoveF();	}
+	if ( CONTROLL::PlayerMoveB() ) { MoveB();	}
+	if ( CONTROLL::PlayerMoveL() ) { MoveL();	}
+	if ( CONTROLL::PlayerMoveR() ) { MoveR();	}
+	if ( CONTROLL::PlayerTurnL() ) { TurnL(); 	}
+	if ( CONTROLL::PlayerTurnR() ) { TurnR(); 	}
+	if ( CONTROLL::PlayerJump()  ) { Jump();	}
+
+	if ( CONTROLL::PlayerFireBall() ) { FireBall();	}
 }
 
 // End Of File

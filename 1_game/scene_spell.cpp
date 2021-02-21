@@ -35,8 +35,10 @@ void SCENE_SPELL::Free( void ){
 
 void SCENE_SPELL::ObjFunc( void ){
 
-	//for ( auto& [p,m] : spell.Update() ) { printd( "SPELL %s\n", p->GetName() );	}
-	//printd( "\n" );
+	for ( auto& [p,m] : spell.Update() ) {
+		( void )p;
+		( void )m;
+	}
 }
 
 //----------------------------------------

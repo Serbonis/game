@@ -35,6 +35,8 @@ void SPELL_FIREBALL::Init( const char* p ){
 
 	AtariBall<FIREBALL_V>( this, 1 );
 	ATARIC::SetAtariFuncOn( [&]( auto, auto, auto, auto ){} );
+
+	ATARIC::SetAtariFilter( FILTER_BIND( this, &SPELL_FIREBALL::atari_filter ) );
 }
 
 void SPELL_FIREBALL::Free( void ){
@@ -65,6 +67,20 @@ auto SPELL_FIREBALL::fsm_move( FSM_ARGP a )->FSM_RETV{
 	MoveF( GetSpeed() );
 
 	return FSM_CONTINUE();
+}
+
+//----------------------------------------
+//----------------------------------------
+#include "enemy_x.hpp"
+
+bool SPELL_FIREBALL::atari_filter( const std::string& s, const ATARIC* c ){
+
+	if ( s == "ENEMY" ) {
+		const auto	p = c->GetAtariOwner<ENEMY_X>();
+		printd( "%p\n",  p );
+	}
+
+	return true;
 }
 
 // End Of File

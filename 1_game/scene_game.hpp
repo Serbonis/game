@@ -41,6 +41,9 @@ namespace SCENE_GAME {
 
 	private:
 		UINT			step;
+
+	private:
+		UINT			level;
 		opal::SSIZE2U	size;
 
 	private:
