@@ -9,13 +9,6 @@
 //----------------------------------------
 using namespace opal;
 
-#include "aobj.hpp"
-#include "aobj_cylinder.hpp"
-
-class ACTOR_AOBJ : public AOBJ<AOBJ_CYLINDER> {
-	using AOBJ::AOBJ;
-};
-
 //----------------------------------------
 //----------------------------------------
 void ACTOR_V::Init( const char* p ){
@@ -36,9 +29,23 @@ void ACTOR_V::Free( void ){
 
 //----------------------------------------
 //----------------------------------------
-void ACTOR_V::Aobject( class ACTOR_X* a, const class ATARIO* o, opal::COLOR c ){
+#include "aobj.hpp"
+#include "aobj_v.hpp"
 
-	( aobj = std::shared_ptr<ACTOR_AOBJ>( new ACTOR_AOBJ{a,o,c}, [](auto p){ p->Close(); } ) )->Open();
+class ACTOR_AOBJ {};
+
+template<typename TYPE>void AobjShape( std::shared_ptr<ACTOR_AOBJ>& aobj, ACTOR_X* a, const ATARIO* o, COLOR c ){
+
+	class ACTOR_AOBJ_SHAPE : public ACTOR_AOBJ, public AOBJ<TYPE> { using AOBJ<TYPE>::AOBJ; };
+
+	const auto	p = std::shared_ptr<ACTOR_AOBJ_SHAPE>( new ACTOR_AOBJ_SHAPE{a,o,c}, [](auto p){ p->Close(); } );
+
+	p->Open();
+
+	aobj =  p;
 }
+
+void ACTOR_V::AobjCylinder( ACTOR_X* a, const ATARIO* o, COLOR c ){ AobjShape<AOBJ_CYLINDER>( aobj, a, o, c );	}
+void ACTOR_V::AobjSphere(   ACTOR_X* a, const ATARIO* o, COLOR c ){ AobjShape<AOBJ_SPHERE  >( aobj, a, o, c );	}
 
 // End Of File

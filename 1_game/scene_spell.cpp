@@ -49,6 +49,7 @@ auto SCENE_SPELL::Generate( SPELL_KIND k )->std::shared_ptr<SPELL_X>{
 		p->Open();
 		p->SetName( Name( k ) );
 		p->SetTexture( RESOURCE::SPELL::Texture( p->Kind() ) );
+		Game::AtariRegister( "P_SHOT", p );
 		return p;
 	}
 	return nullptr;
@@ -57,8 +58,8 @@ auto SCENE_SPELL::Generate( SPELL_KIND k )->std::shared_ptr<SPELL_X>{
 auto SCENE_SPELL::Generate( const SPELL_DATA& d )->std::shared_ptr<SPELL_X>{
 
 	if ( const auto p = Generate( d.kind ) ) {
-		p->SetTrans( d.posx, d.height, d.posy );
-		p->SetRotate( d.direction );
+		p->SetPosition( d.posx, d.posy, d.height );
+		p->SetDirection( d.direction );
 		p->SetPower( d.power );
 		p->SetSpeed( d.speed );
 		return p;

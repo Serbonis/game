@@ -32,6 +32,9 @@ void SPELL_FIREBALL::Init( const char* p ){
 
 	ACTOR_A_MOVE::SetAction<FSM_FIREBALL>( "fsm", FSM_BIND( this, &SPELL_FIREBALL::fsm_move ), SEC( 1 ) );
 	SetUpdater( "FIREBALL_C", [&]{ FIREBALL_C::Updater( this ); } );
+
+	AtariBall<FIREBALL_V>( this, 1 );
+	ATARIC::SetAtariFuncOn( [&]( auto, auto, auto, auto ){} );
 }
 
 void SPELL_FIREBALL::Free( void ){

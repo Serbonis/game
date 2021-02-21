@@ -16,8 +16,13 @@ struct ACTOR_W {
 
 class ACTOR_M : protected ACTOR_W {
 public:
-	virtual void SetStat( UINT s = ACTOR_STAT::Undef ){ stat = s;	}
-	virtual auto GetStat( void ) const->UINT{ return stat;	}
+	virtual void SetStat( UINT = ACTOR_STAT::Undef );
+	virtual auto GetStat( void ) const->UINT;
+
+public:
+	virtual void SetPosition( float, float, float );
+	virtual void SetPosition( float, float );
+	virtual void SetDirection( float );
 };
 
 // End Of File

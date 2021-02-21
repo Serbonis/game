@@ -17,7 +17,6 @@ void FIREBALL_V::Init( const char* p ){
 	rect3.Open( this );
 
 	rect3.SetSize( 1 );
-	rect3.SetPivotY( 2 );
 	rect3.SetPart( BILL );
 	rect3.SubFlag( FLAG_R );
 	rect3.Parent( this );

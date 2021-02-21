@@ -71,6 +71,25 @@ protected:
 };
 
 //----------------------------------------
+// ROTATE
+//----------------------------------------
+class ACTOR_A_ROTATE : public ACTOR_A {
+	using ACTOR_A::ACTOR_A;
+
+private:
+	float	speed;
+
+public:
+	virtual void RotateL( void  );
+	virtual void RotateR( void  );
+	virtual void RotateL( float );
+	virtual void RotateR( float );
+
+	virtual void SetRotateSpeed( float );
+	virtual auto GetRotateSpeed( void ) const->float;
+};
+
+//----------------------------------------
 // JUMP
 //----------------------------------------
 class ACTOR_A_JUMP : public ACTOR_A {
@@ -85,6 +104,30 @@ public:
 
 protected:
 	virtual auto fsm_jump( FSM_ARGP )->FSM_RETV;
+};
+
+//----------------------------------------
+// SPELL
+//----------------------------------------
+class ACTOR_A_SPELL : public ACTOR_A {
+	using ACTOR_A::ACTOR_A;
+
+private:
+	float			speed;
+	float			power;
+	opal::VECTOR3	pivot;
+
+public:
+	virtual void SetSpellSpeed( float );
+	virtual auto GetSpellSpeed( void ) const->float;
+
+	virtual void SetSpellPower( float );
+	virtual auto GetSpellPower( void ) const->float;
+
+	virtual void SetSpellPivot( float, float, float );
+	virtual void SetSpellPivot( float, float );
+	virtual void SetSpellPivot( float );
+	virtual auto GetSpellPivot( void ) const->opal::VECTOR3;
 };
 
 // End Of File

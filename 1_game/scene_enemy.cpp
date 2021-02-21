@@ -96,11 +96,15 @@ auto SCENE_ENEMY::Name( ENEMY_KIND k )->std::string{
 void SCENE_ENEMY::SetPosition( std::shared_ptr<ENEMY_X> e, int x, int y ){
 
 	Game::SetPosition( e, x, y );
+
+	e->SetPosition();
 }
 
 void SCENE_ENEMY::SetDirection( std::shared_ptr<ENEMY_X> e, int  d ){
 
 	Game::SetDirection( e, d );
+
+	e->SetDirection();
 }
 
 void SCENE_ENEMY::SetStatus( std::shared_ptr<ENEMY_X> e, UINT s ){

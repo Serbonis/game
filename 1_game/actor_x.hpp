@@ -24,6 +24,14 @@ public:
 public:
 	virtual void Init( const char* = nullptr ) override;
 	virtual void Free( void ) override;
+
+public:
+	virtual void SetPosition(  float, float, float ) override;
+	virtual void SetPosition(  float, float ) override;
+	virtual void SetDirection( float ) override;
+
+	virtual void SetPosition(  void );
+	virtual void SetDirection( void );
 };
 
 //----------------------------------------
@@ -35,7 +43,16 @@ template<typename V, typename A>void AtariBody( A* a, float s, float h, opal::CO
 	a->ATARIC::SetCollision<COLLISION_3D::CYLINDER>( "BODY", COLLISION_3D::CYLINDER{s,h}, a->MatrixWorld() );
 	a->ATARIC::SetAtariFlag( "BODY", true );
 
-	a->template GetView<V>()->Aobject( a, a->ATARIC::AtariSearch( "BODY" ), c );
+	a->template GetView<V>()->AobjCylinder( a, a->ATARIC::AtariSearch( "BODY" ), c );
+}
+
+template<typename V, typename A>void AtariBall( A* a, float s, opal::COLOR c = opal::RED ){
+
+	a->ATARIC::SetAtariFlag( true );
+	a->ATARIC::SetCollision<COLLISION_3D::SPHERE>( "BODY", COLLISION_3D::SPHERE{s}, a->MatrixWorld() );
+	a->ATARIC::SetAtariFlag( "BODY", true );
+
+	a->template GetView<V>()->AobjSphere( a, a->ATARIC::AtariSearch( "BODY" ), c );
 }
 
 // End Of File

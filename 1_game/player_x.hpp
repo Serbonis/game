@@ -9,7 +9,7 @@
 // PLAYER X
 //----------------------------------------
 class PLAYER_C :
-	public ACTOR_C<ACTOR_A_MOVE,ACTOR_A_TURN,ACTOR_A_JUMP>
+	public ACTOR_C<ACTOR_A_MOVE,ACTOR_A_TURN,ACTOR_A_JUMP,ACTOR_A_SPELL>
 {};
 
 class PLAYER_X :

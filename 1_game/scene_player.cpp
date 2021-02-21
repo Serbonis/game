@@ -48,11 +48,15 @@ auto SCENE_PLAYER::GetConnect( void ) const->const ACTOR_X*{ return player.get()
 void SCENE_PLAYER::SetPosition( int x, int y ){
 
 	Game::SetPosition( player, x, y );
+
+	player->SetPosition();
 }
 
 void SCENE_PLAYER::SetDirection( int d ){
 
 	Game::SetDirection( player, d );
+
+	player->SetDirection();
 }
 
 // End Of File

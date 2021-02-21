@@ -12,16 +12,23 @@ using namespace opal;
 //----------------------------------------
 void CAMERA_X::Init( const char* p ){
 
-	DRAW3L::Init( p );
+	ACTOR_X::Init( p );
 
-	armh.Open( this );
+	view.Open();
+
+	armh.Open( &view );
 	armh.Parent( this );
 
-	armv.Open( this );
+	armv.Open( &view );
 	armv.Parent( &armh );
 
-	camera.Open( this );
+	camera.Open( &view );
 	camera.Parent( &armv );
+
+	SetMoveSpeed( 0.04f );
+	SetRotateSpeed( RAD( 4.0f ) );
+
+	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
 }
 
 //----------------------------------------
@@ -31,8 +38,9 @@ void CAMERA_X::Free( void ){
 	camera.Close();
 	armv.Close();
 	armh.Close();
+	view.Close();
 
-	DRAW3L::Free();
+	ACTOR_X::Free();
 }
 
 //----------------------------------------
@@ -62,36 +70,54 @@ auto CAMERA_X::GetZoom( void ) const->float{ return camera.GetFov();		}
 
 //----------------------------------------
 //----------------------------------------
+#if OPAL_DEBUG
 #include "pad.hpp"
+#include "scene_game.hpp"
 
-void CAMERA_X::ObjFunc( void ){
+void CAMERA_X::Debug( float ms, float rs, float zs ){
 
-	if ( PADX::KeyPush( KEY_LSHIFT ) ) {
-		printd( "CAMERA\n" );
-		printd( "H[R/F] : %f\n", GetArmH() );
-		printd( "V[T/G] : %f\n", GetArmV() );
-		printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );
-		printd( "P[U/I] : %f\n", DEG( GetPan()  ) );
-		printd( "Z[J/K] : %f\n", GetZoom() );
-		printd( "\n" );
+	printd( "CAMERA : %s\n", GetName() );
 
-		const auto	ms = 0.04f;
-		const auto	rs = RAD( 4.0f );
-		const auto	zs = 0.01f;
+	if ( !Parent() ) {
+		const auto	t = GetTrans();
+		const auto	p = Game::MapPoint(  t );
+		const auto	v = Game::MapVector( p );
 
-		if ( PADX::KeyPush( KEY_R ) ) { AddArmH( +ms ); }
-		if ( PADX::KeyPush( KEY_F ) ) { AddArmH( -ms ); }
-		if ( PADX::KeyPush( KEY_T ) ) { AddArmV( +ms ); }
-		if ( PADX::KeyPush( KEY_G ) ) { AddArmV( -ms ); }
+		printd( "V2P [%02d,%02d]\n", p.x, p.y );
+		printd( "P2V [%f,%f]\n", v.x, v.z );
+		printd( "F[A/D] : %f, %f\n", t.x, t.z );
+		printd( "B[W/S] : %f\n", GetMoveSpeed() );
+		printd( "R[Q/E] : %f\n", DEG( GetRotateSpeed() ) );
+		printd( "H[SPC] : %f\n", t.y );
 
-		if ( PADX::KeyPush( KEY_Y ) ) { AddTilt( +rs ); }
-		if ( PADX::KeyPush( KEY_H ) ) { AddTilt( -rs ); }
-		if ( PADX::KeyPush( KEY_U ) ) { AddPan(  +rs ); }
-		if ( PADX::KeyPush( KEY_I ) ) { AddPan(  -rs ); }
-
-		if ( PADX::KeyPush( KEY_J ) ) { AddZoom( +zs ); }
-		if ( PADX::KeyPush( KEY_K ) ) { AddZoom( -zs ); }
+		if ( PADX::KeyPush( KEY_W ) ) { MoveF();	}
+		if ( PADX::KeyPush( KEY_S ) ) { MoveB();	}
+		if ( PADX::KeyPush( KEY_A ) ) { MoveL();	}
+		if ( PADX::KeyPush( KEY_D ) ) { MoveR();	}
+		if ( PADX::KeyTrig( KEY_Q ) ) { RotateL(); 	}
+		if ( PADX::KeyTrig( KEY_E ) ) { RotateR(); 	}
 	}
+
+	printd( "H[R/F] : %f\n", GetArmH() );
+	printd( "V[T/G] : %f\n", GetArmV() );
+	printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );
+	printd( "P[U/I] : %f\n", DEG( GetPan()  ) );
+	printd( "Z[J/K] : %f\n", GetZoom() );
+	printd( "\n" );
+
+	if ( PADX::KeyPush( KEY_R ) ) { AddArmH( +ms ); }
+	if ( PADX::KeyPush( KEY_F ) ) { AddArmH( -ms ); }
+	if ( PADX::KeyPush( KEY_T ) ) { AddArmV( +ms ); }
+	if ( PADX::KeyPush( KEY_G ) ) { AddArmV( -ms ); }
+
+	if ( PADX::KeyPush( KEY_Y ) ) { AddTilt( +rs ); }
+	if ( PADX::KeyPush( KEY_H ) ) { AddTilt( -rs ); }
+	if ( PADX::KeyPush( KEY_U ) ) { AddPan(  +rs ); }
+	if ( PADX::KeyPush( KEY_I ) ) { AddPan(  -rs ); }
+
+	if ( PADX::KeyPush( KEY_J ) ) { AddZoom( +zs ); }
+	if ( PADX::KeyPush( KEY_K ) ) { AddZoom( -zs ); }
 }
+#endif
 
 // End Of File

@@ -7,7 +7,7 @@
 //----------------------------------------
 // ACTOR_V
 //----------------------------------------
-class ACTOR_V : public ACTOR_VIEW{
+class ACTOR_V : public ACTOR_VIEW {
 protected:
 	std::shared_ptr<class ACTOR_SHADOW>	shadow;
 	std::shared_ptr<class ACTOR_AOBJ>	aobj;
@@ -17,7 +17,8 @@ public:
 	virtual void Free( void ) override;
 
 public:
-	virtual void Aobject( class ACTOR_X*, const class ATARIO*, opal::COLOR = opal::RED ) final;
+	virtual void AobjCylinder( class ACTOR_X*, const class ATARIO*, opal::COLOR = opal::RED ) final;
+	virtual void AobjSphere(   class ACTOR_X*, const class ATARIO*, opal::COLOR = opal::RED ) final;
 };
 
 // End Of File

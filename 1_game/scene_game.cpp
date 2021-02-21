@@ -3,13 +3,12 @@
 //========================================
 #include "scene_game.hpp"
 
+#include "scene_atari.hpp"
 #include "scene_camera.hpp"
 #include "scene_player.hpp"
 #include "scene_enemy.hpp"
 #include "scene_spell.hpp"
 #include "scene_grid.hpp"
-
-#include "atari.hpp"
 
 //----------------------------------------
 // SCENE GAME
@@ -27,6 +26,7 @@ namespace {
 SCENE_G::SCENE_G() :
 	step{0},
 	size{0,0},
+	atari{ std::make_shared<SCENE_ATARI>() },
 	camera{std::make_shared<SCENE_CAMERA>()},
 	player{std::make_shared<SCENE_PLAYER>()},
 	enemy{ std::make_shared<SCENE_ENEMY>() },
@@ -35,18 +35,12 @@ SCENE_G::SCENE_G() :
 {
 	game	= this;
 
-	atari = std::shared_ptr<ATARIS>( SRVCS::Generate<ATARIS>( "ATARI" ), [](auto){ SRVCS::Destroy( "ATARI" ); } );
-	atari->Begin();
-	atari->Create( "P_SHOT","E_SHOT" );
-	atari->Create( "P_SHOT","ENEMY"  );
-	atari->Create( "PLAYER","ENEMY"  );
-	atari->Create( "PLAYER","E_SHOT" );
-
+	atari->Open(  "ATARI"  );
 	camera->Open( "CAMERA" );
 	player->Open( "PLAYER" );
-	enemy->Open( "ENEMY" );
-	spell->Open( "SPELL" );
-	grid->Open( "GRID" );
+	enemy->Open(  "ENEMY"  );
+	spell->Open(  "SPELL"  );
+	grid->Open(   "GRID"   );
 
 	camera->SetConnect( player->GetConnect() );
 }
@@ -61,18 +55,13 @@ SCENE_G::~SCENE_G()
 	enemy->Close();
 	player->Close();
 	camera->Close();
-
-	atari->Destroy();
-	atari->End();
-	atari = nullptr;
+	atari->Close();
 }
 
 //----------------------------------------
 // ŽÀs
 //----------------------------------------
 bool SCENE_G::operator()( SCENE_MANAGER* ){
-
-	atari->Debug();
 
 	switch ( step ) {
 	case 0:
@@ -211,6 +200,11 @@ auto SCENE_G::MapPosition( int x, int y, float h )->VECTOR3{
 			 ( ( m.h-1 - y ) + 0.5f ) * s };
 }
 
+auto SCENE_G::MapDirection( int d )->int{
+
+	return d % DIX_MAX;
+}
+
 //----------------------------------------
 //----------------------------------------
 void SCENE_G::SetPosition( std::shared_ptr<OBJECT> o, int x, int y ){
@@ -235,9 +229,7 @@ bool SCENE_G::GenerateSpell( const SPELL_DATA& d ){
 
 //----------------------------------------
 //----------------------------------------
-#include "actor_x.hpp"
-
-void SCENE_G::AtariRegister( const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->Register( s, p );	}
-void SCENE_G::AtariRelease(  const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->Release(  s, p );	}
+void SCENE_G::AtariRegister( const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->AtariRegister( s, p );	}
+void SCENE_G::AtariRelease(  const char* s, std::shared_ptr<ACTOR_X> p ){ game->atari->AtariRelease(  s, p );	}
 
 // End Of File

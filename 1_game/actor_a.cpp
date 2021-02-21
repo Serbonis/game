@@ -164,6 +164,18 @@ auto ACTOR_A_TURN::fsm_turnR( FSM_ARGP a )->FSM_RETV{
 }
 
 //----------------------------------------
+// ROTATE
+//----------------------------------------
+void ACTOR_A_ROTATE::RotateL( void ){ RotateL( speed );	}
+void ACTOR_A_ROTATE::RotateR( void ){ RotateR( speed );	}
+
+void ACTOR_A_ROTATE::RotateL( float s ){ actor->AddRotate( +s );	}
+void ACTOR_A_ROTATE::RotateR( float s ){ actor->AddRotate( -s );	}
+
+void ACTOR_A_ROTATE::SetRotateSpeed( float s ){ speed = s;	}
+auto ACTOR_A_ROTATE::GetRotateSpeed( void ) const->float{ return speed;	}
+
+//----------------------------------------
 // JUMP
 //----------------------------------------
 void ACTOR_A_JUMP::Jump( void ){ Jump( speed );	}
@@ -173,5 +185,19 @@ auto ACTOR_A_JUMP::fsm_jump( FSM_ARGP a )->FSM_RETV{
 
 	return FSM_CONTINUE();
 }
+
+//----------------------------------------
+// SPELL
+//----------------------------------------
+void ACTOR_A_SPELL::SetSpellSpeed( float s ){ speed = s;	}
+auto ACTOR_A_SPELL::GetSpellSpeed( void ) const->float{ return speed;	}
+
+void ACTOR_A_SPELL::SetSpellPower( float s ){ power = s;	}
+auto ACTOR_A_SPELL::GetSpellPower( void ) const->float{ return power;	}
+
+void ACTOR_A_SPELL::SetSpellPivot( float x, float y, float z ){ pivot = VECTOR3{x,y,z};	}
+void ACTOR_A_SPELL::SetSpellPivot( float y, float z ){ pivot.y = y; pivot.z = z;	}
+void ACTOR_A_SPELL::SetSpellPivot( float y ){ pivot.y = y;	}
+auto ACTOR_A_SPELL::GetSpellPivot( void ) const->VECTOR3{ return pivot;	}
 
 // End Of File

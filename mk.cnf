@@ -59,6 +59,8 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		scene_main.cpp
 		scene_game.cpp
 
+		scene_atari.cpp
+
 		scene_camera.cpp
 		camera_x.cpp
 		camera_p.cpp
@@ -72,9 +74,10 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		actor_x.cpp
 		actor_v.cpp
 		actor_a.cpp
+		actor_m.cpp
 
 		aobj.cpp
-		aobj_cylinder.cpp
+		aobj_v.cpp
 
 		scene_player.cpp
 		player_x.cpp

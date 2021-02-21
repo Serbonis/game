@@ -7,6 +7,7 @@
 //----------------------------------------
 // SCENE GAME
 //----------------------------------------
+class SCENE_ATARI;
 class SCENE_CAMERA;
 class SCENE_PLAYER;
 class SCENE_ENEMY;
@@ -43,14 +44,12 @@ namespace SCENE_GAME {
 		opal::SSIZE2U	size;
 
 	private:
+		std::shared_ptr<SCENE_ATARI>	atari;
 		std::shared_ptr<SCENE_CAMERA>	camera;
 		std::shared_ptr<SCENE_PLAYER>	player;
 		std::shared_ptr<SCENE_ENEMY>	enemy;
 		std::shared_ptr<SCENE_SPELL>	spell;
 		std::shared_ptr<SCENE_GRID>		grid;
-
-	private:
-		std::shared_ptr<ATARIS>			atari;
 
 	private:
 		static constexpr float	GRID_SIZE = 9.6f;
@@ -61,6 +60,7 @@ namespace SCENE_GAME {
 		static auto MapPoint(  const opal::VECTOR3& )->opal::POINT2I;
 		static auto MapVector( const opal::POINT2I&, float = 0.f )->opal::VECTOR3;
 		static auto MapPosition( int, int, float = 0.f )->opal::VECTOR3;
+		static auto MapDirection( int )->int;
 
 	public:
 		static void SetPosition(  std::shared_ptr<opal::OBJECT>, int, int );

@@ -2,16 +2,25 @@
 //========================================
 // camera_x.hpp
 //========================================
+#include "actor_x.hpp"
 #include "camera.hpp"
 
 //----------------------------------------
 // CAMERA X
 //----------------------------------------
-class CAMERA_X : public opal::DRAW3L{
+class CAMERA_C :
+	public ACTOR_C<ACTOR_A_MOVE,ACTOR_A_ROTATE>
+{};
+
+class CAMERA_X :
+	public ACTOR_X,
+	public CAMERA_C
+{
 protected:
-	CAMERA			camera;
+	opal::DRAWL		view;
 	opal::DRAWT		armv;
 	opal::DRAWT		armh;
+	CAMERA			camera;
 
 public:
 	virtual void Init( const char* = nullptr ) override;
@@ -39,8 +48,12 @@ public:
 	virtual auto GetPan(  void ) const->float final;
 	virtual auto GetZoom( void ) const->float final;
 
-private:
-	virtual void ObjFunc( void ) override;
+#if OPAL_DEBUG
+public:
+	virtual void Debug( float = 0.04f,
+						float = RAD( 4.0f ),
+						float = 0.01f ) final;
+#endif
 };
 
 // End Of File
