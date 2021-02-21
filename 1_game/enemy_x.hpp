@@ -24,6 +24,9 @@ public:
 	virtual void Init( const char* = nullptr ) override;
 	virtual void Free( void ) override;
 
+private:
+	virtual void ObjFunc( void ) override;
+
 public:
 	virtual void SetTexture( const class TEXTURE*, std::shared_ptr<opal::SRECTF> = nullptr ) = 0;
 
@@ -31,8 +34,6 @@ private:
 	virtual void atari_func( const std::string&,const ATARIC*,
 							 const std::string&,const ATARIC* );
 
-private:
-	virtual void ObjFunc( void ) override;
 };
 
 // End Of File

@@ -50,6 +50,7 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 	game.cpp
 
 	resource.cpp
+	constant.cpp
 	controll.cpp
 
 	0_title {

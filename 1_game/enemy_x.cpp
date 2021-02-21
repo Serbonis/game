@@ -40,14 +40,14 @@ void ENEMY_X::Free( void ){
 
 //----------------------------------------
 //----------------------------------------
+void ENEMY_X::ObjFunc( void ){}
+
+//----------------------------------------
+//----------------------------------------
 void ENEMY_X::atari_func( const std::string& as,const ATARIC* ac,
 						  const std::string& bs,const ATARIC* bc ){
 
 	Kill( 0 );
 }
-
-//----------------------------------------
-//----------------------------------------
-void ENEMY_X::ObjFunc( void ){}
 
 // End Of File

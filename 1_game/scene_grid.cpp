@@ -72,8 +72,6 @@ void SCENE_GRID::Generate( UINT w, UINT h ){
 
 void SCENE_GRID::Destroy( void ){
 
-	printf( "destroy\n" );
-
 	for ( auto& l : *grid ) {
 		for ( auto& g : l ) {
 			g->Close();

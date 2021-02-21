@@ -4,6 +4,8 @@
 #include "player_x.hpp"
 #include "player_v.hpp"
 
+#include "constant.hpp"
+
 //----------------------------------------
 // PLAYER X
 //----------------------------------------
@@ -17,19 +19,19 @@ void PLAYER_X::Init( const char* p ){
 
 	SetView<PLAYER_V>();
 
-	SetMoveSpeed( 0.04f );
-	SetTurnSpeed( RAD( 4.0f ) );
+	SetMoveSpeed( CONSTANT::PLAYER_MOVE_SPEED );
+	SetTurnSpeed( CONSTANT::PLAYER_TURN_SPEED );
 
-	SetSpellSpeed( 0.4f );
-	SetSpellPower( 0 );
-	SetSpellPivot( 2 );
+	SetSpellSpeed( CONSTANT::PLAYER_SPELL_SPEED );
+	SetSpellPower( CONSTANT::PLAYER_SPELL_POWER );
+	SetSpellPivot( CONSTANT::PLAYER_SPELL_PIVOT );
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
 
 	AtariBody<PLAYER_V>( this, 2, 2 );
 
 	ATARIC::SetAtariOwner( this );
-	ATARIC::SetAtariFuncOn( [&]( auto as, auto ac, auto bs, auto bc ){ printd( "hit player" ); } );
+	ATARIC::SetAtariFuncOn( ATARI_BIND( this, &PLAYER_X::atari_func ) );
 }
 
 //----------------------------------------
@@ -113,6 +115,16 @@ void PLAYER_X::ObjFunc( void ){
 	if ( CONTROLL::PlayerJump()  ) { Jump();	}
 
 	if ( CONTROLL::PlayerFireBall() ) { FireBall();	}
+}
+
+//----------------------------------------
+//----------------------------------------
+void PLAYER_X::atari_func( const std::string& as,const ATARIC* ac,
+						   const std::string& bs,const ATARIC* bc ){
+
+	if ( bs == "ENEMY" || bs == "E_SHOT" ) {
+		printd( "DAMAGE\n" );
+	}
 }
 
 // End Of File
