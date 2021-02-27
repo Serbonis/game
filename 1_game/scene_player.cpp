@@ -7,6 +7,8 @@
 #include "player_x.hpp"
 #include "player_r.hpp"
 
+#include "constant.hpp"
+
 //----------------------------------------
 // SCENE_PLAYER
 //----------------------------------------
@@ -22,7 +24,15 @@ void SCENE_PLAYER::Init( const char* p ){
 	WORKL::Init( p );
 
 	PRIMS::MakeSharedPrim( player );
-	player->SetTexture( RESOURCE::PLAYER::Texture() );
+	{
+		player->SetTexture( RESOURCE::PLAYER::Texture() );
+
+		player->SetMoveSpeed(  CONSTANT::PLAYER_MOVE_SPEED  );
+		player->SetTurnSpeed(  CONSTANT::PLAYER_TURN_SPEED  );
+		player->SetSpellSpeed( CONSTANT::PLAYER_SPELL_SPEED );
+		player->SetSpellPower( CONSTANT::PLAYER_SPELL_POWER );
+		player->SetSpellPivot( CONSTANT::PLAYER_SPELL_PIVOT );
+	}
 
 	Game::AtariRegister( "PLAYER", player );
 }

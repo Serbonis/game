@@ -106,7 +106,7 @@ void SCENE_CAMERA::SetPosition( int x, int y ){
 
 	Game::SetPosition( platform, x, y );
 
-	*platform = Game::MapPoint( Game::MapPosition( x, y ) );
+	*platform = Game::MapPosition( Game::Data2Map( x, y ) );
 }
 
 void SCENE_CAMERA::SetDirection( int d ){

@@ -60,10 +60,20 @@ namespace SCENE_GAME {
 	public:
 		static auto GridSize( void )->float;
 		static auto MapSize( void )->opal::SSIZE2U;
-		static auto MapPoint(  const opal::VECTOR3& )->opal::POINT2I;
+
+	public:
+		static auto Data2Map( int, int, float = 0.f )->opal::VECTOR3;
+
+	public:
 		static auto MapVector( const opal::POINT2I&, float = 0.f )->opal::VECTOR3;
-		static auto MapPosition( int, int, float = 0.f )->opal::VECTOR3;
-		static auto MapDirection( int )->int;
+		static auto MapOffset( const opal::VECTOR3& )->opal::DVECTOR;
+		static auto MapOffset( float, float )->opal::VECTOR2;
+		static auto MapOffsetX( float )->float;
+		static auto MapOffsetY( float )->float;
+
+	public:
+		static auto MapPosition(  const opal::VECTOR3& )->opal::POINT2I;
+		static auto MapDirection( float )->int;
 
 	public:
 		static void SetPosition(  std::shared_ptr<opal::OBJECT>, int, int );

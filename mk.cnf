@@ -78,6 +78,7 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		actor_v.cpp
 		actor_a.cpp
 		actor_m.cpp
+		actor_u.cpp
 
 		aobj.cpp
 		aobj_v.cpp

@@ -11,6 +11,9 @@
 #include "scene_grid.hpp"
 
 //----------------------------------------
+// VIEW PORT
+//----------------------------------------
+//----------------------------------------
 // SCENE GAME
 //----------------------------------------
 using namespace opal;
@@ -23,6 +26,52 @@ namespace {
 #if OPAL_DEBUG
 static bool	debug_flag;
 #endif
+
+#include "draw.hpp"
+
+struct VIEWPORT {
+	void operator()( const SRECTF& v                    ){ begin.SetRect( v ); 				}
+	void operator()( float x, float y, float w, float h ){ begin.SetRect( x, y, w, h );		}
+	void operator()( const VECTOR2& p, float w, float h ){ begin.SetRect( p.x, p.y, w, h );	}
+	void operator()( float x, float y, const SSIZE& s   ){ begin.SetRect( x, y, s.w, s.h );	}
+
+	class BEGIN final :
+		public opal::DRAWT,
+		public opal::CRECTF
+	{
+	private:
+		virtual void DrawMain( void ) override { DRAWX::ViewportBegin( *this ); }
+	}	begin;
+
+	class END final : public opal::DRAWT {
+	private:
+		virtual void DrawMain( void ) override { DRAWX::ViewportEnd(); }
+	}	end;
+};
+
+VIEWPORT	viewport;
+
+struct SCISSOR {
+	void operator()( const SRECTF& v                    ){ begin.SetRect( v ); 				}
+	void operator()( float x, float y, float w, float h ){ begin.SetRect( x, y, w, h );		}
+	void operator()( const VECTOR2& p, float w, float h ){ begin.SetRect( p.x, p.y, w, h );	}
+	void operator()( float x, float y, const SSIZE& s   ){ begin.SetRect( x, y, s.w, s.h );	}
+
+	class BEGIN final :
+		public opal::DRAWT,
+		public opal::CRECTF
+	{
+	private:
+		virtual void DrawMain( void ) override { DRAWX::SetScissor( *this ); }
+	}	begin;
+
+	class END final : public opal::DRAWT {
+	private:
+		virtual void DrawMain( void ) override { DRAWX::SetScissor(); }
+	}	end;
+};
+
+SCISSOR	scissor;
 
 //----------------------------------------
 // 初期化
@@ -42,10 +91,21 @@ SCENE_G::SCENE_G() :
 
 	atari->Open(  "ATARI"  );
 	camera->Open( "CAMERA" );
-	player->Open( "PLAYER" );
-	enemy->Open(  "ENEMY"  );
-	spell->Open(  "SPELL"  );
-	grid->Open(   "GRID"   );
+
+	viewport.begin.Open( "VP GAME" );
+	viewport( -200, 0, 1600, 1200 );
+	scissor.begin.Open( "SC GAME" );
+	scissor( 0, 400, 1600-400, 1200 );
+	{
+		player->Open( "PLAYER" );
+		enemy->Open(  "ENEMY"  );
+		spell->Open(  "SPELL"  );
+		grid->Open(   "GRID"   );
+	}
+	viewport.end.Open( "VP GAME" );
+	viewport.end.SetPrio( 1 );
+	scissor.end.Open( "SC GAME" );
+	scissor.end.SetPrio( 1 );
 
 	camera->SetConnect( player->GetConnect() );
 
@@ -59,12 +119,21 @@ SCENE_G::SCENE_G() :
 //----------------------------------------
 SCENE_G::~SCENE_G()
 {
-	grid->Close();
-	spell->Close();
-	enemy->Close();
-	player->Close();
+	scissor.end.Close();
+	viewport.end.Close();
+	{
+		grid->Close();
+		spell->Close();
+		enemy->Close();
+		player->Close();
+	}
+	scissor.begin.Close();
+	viewport.begin.Close();
+
 	camera->Close();
 	atari->Close();
+
+	game = nullptr;
 }
 
 //----------------------------------------
@@ -196,29 +265,12 @@ void SCENE_G::DestroyMap( void ){
 //----------------------------------------
 //----------------------------------------
 auto SCENE_G::GridSize( void )->float{ return GRID_SIZE;	}
-
 auto SCENE_G::MapSize( void )->SSIZE2U{ return game->size;	}
 
-auto SCENE_G::MapPoint( const VECTOR3& v )->POINT2I{
-
-	const auto	s = GridSize();
-	const auto	x = ( int )( v.x/s );
-	const auto	y = ( int )( v.z/s );
-
-	return { v.x < 0 ? x-1 : x,
-			 v.z < 0 ? y-1 : y };
-}
-
-auto SCENE_G::MapVector( const POINT2I& p, float y )->VECTOR3{
-
-	const auto	s = GridSize();
-	const auto	x = ( p.x + 0.5f ) * s;
-	const auto	z = ( p.y + 0.5f ) * s;
-
-	return { x, y, z };
-}
-
-auto SCENE_G::MapPosition( int x, int y, float h )->VECTOR3{
+//----------------------------------------
+// マップデータをマップ位置に変換
+//----------------------------------------
+auto SCENE_G::Data2Map( int x, int y, float h )->VECTOR3{
 
 	const auto	s = GridSize();
 	const auto	m = MapSize();
@@ -228,16 +280,48 @@ auto SCENE_G::MapPosition( int x, int y, float h )->VECTOR3{
 			 ( ( m.h-1 - y ) + 0.5f ) * s };
 }
 
-auto SCENE_G::MapDirection( int d )->int{
+//----------------------------------------
+//----------------------------------------
+// マップ位置をオブジェクト座標に変換
+auto SCENE_G::MapVector( const POINT2I& p, float y )->VECTOR3{
 
-	return d % DIX_MAX;
+	const auto	s = GridSize();
+	const auto	x = ( p.x + 0.5f ) * s;
+	const auto	z = ( p.y + 0.5f ) * s;
+
+	return { x, y, z };
+}
+
+// オブジェクト座標からマップ位置内のオフセットを算出
+auto SCENE_G::MapOffset( const opal::VECTOR3& t )->opal::DVECTOR{ return { MapOffset( t.x, t.z ),t.y };}
+auto SCENE_G::MapOffset( float x, float z )->opal::VECTOR2{ return { MapOffsetX( x ), MapOffsetY( z ) };}
+auto SCENE_G::MapOffsetX( float p )->float{ return std::fmod( p, +GridSize() );	}
+auto SCENE_G::MapOffsetY( float p )->float{ return std::fmod( p, -GridSize() );	}
+
+//----------------------------------------
+//----------------------------------------
+// オブジェクトの座標をマップ位置に変換
+auto SCENE_G::MapPosition( const VECTOR3& v )->POINT2I{
+
+	const auto	s = GridSize();
+	const auto	x = ( int )( v.x/s );
+	const auto	y = ( int )( v.z/s );
+
+	return { v.x < 0 ? x-1 : x,
+			 v.z < 0 ? y-1 : y };
+}
+
+// オブジェクトの回転をマップ方向に変換
+auto SCENE_G::MapDirection( float r )->int{
+
+	return int( r/ RAD( 90.f ) ) % DIX_MAX;
 }
 
 //----------------------------------------
 //----------------------------------------
 void SCENE_G::SetPosition( std::shared_ptr<OBJECT> o, int x, int y ){
 
-	const auto	p = MapPosition( x, y );
+	const auto	p = Data2Map( x, y );
 
 	o->SetTransX( p.x );
 	o->SetTransZ( p.z );

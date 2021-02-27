@@ -44,7 +44,7 @@ void PLATFORM::ObjFunc( void ){
 	if ( subject ) {
 		SetRotateY( subject->GetRotate() );
 
-		if ( const auto p = Game::MapPoint( subject->GetTrans() ); point != p ) {
+		if ( const auto p = Game::MapPosition( subject->GetTrans() ); point != p ) {
 			const auto	sv = DVECTOR( GetTrans() );
 			const auto	ev = DVECTOR( Game::MapVector( p ) );
 			const auto	mv = []( auto m, auto s, auto e, auto t ){

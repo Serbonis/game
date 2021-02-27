@@ -25,13 +25,27 @@ public:
 	virtual void Init( const char* = nullptr ) override;
 	virtual void Free( void ) override;
 
-public:
-	virtual void SetPosition(  float, float, float ) override;
-	virtual void SetPosition(  float, float ) override;
-	virtual void SetDirection( float ) override;
+private:
+	virtual void update( void ) final;
 
-	virtual void SetPosition(  void );
-	virtual void SetDirection( void );
+protected:
+	virtual bool atari_filter( const std::string&, const ATARIC* );
+
+public:
+	virtual void SetPosition( float, float, float );
+	virtual void SetPosition( float, float );
+	virtual void SetPosition( void );
+	virtual void SetDirection( float );
+	virtual void SetDirection( void  );
+
+	virtual auto GetPosition(  void ) const->std::pair<int,int>;
+	virtual auto GetDirection( void ) const->int;
+
+public:
+	virtual void SetOffset( float, float, float );
+	virtual void SetOffset( float, float );
+	virtual void SetOffset( float );
+	virtual auto GetOffset( void ) const->opal::DVECTOR;
 };
 
 //----------------------------------------

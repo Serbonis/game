@@ -4,8 +4,6 @@
 #include "player_x.hpp"
 #include "player_v.hpp"
 
-#include "constant.hpp"
-
 //----------------------------------------
 // PLAYER X
 //----------------------------------------
@@ -18,13 +16,6 @@ void PLAYER_X::Init( const char* p ){
 	ACTOR_X::Init( p );
 
 	SetView<PLAYER_V>();
-
-	SetMoveSpeed( CONSTANT::PLAYER_MOVE_SPEED );
-	SetTurnSpeed( CONSTANT::PLAYER_TURN_SPEED );
-
-	SetSpellSpeed( CONSTANT::PLAYER_SPELL_SPEED );
-	SetSpellPower( CONSTANT::PLAYER_SPELL_POWER );
-	SetSpellPivot( CONSTANT::PLAYER_SPELL_PIVOT );
 
 	SetUpdater( "ACTOR_C", [&]{ ACTOR_C::Updater( this ); } );
 
@@ -91,17 +82,17 @@ void PLAYER_X::ObjFunc( void ){
 	}
 
 	if ( CONTROLL::PlayerDebug() ) {
-		const auto	t = GetTrans();
-		const auto	p = Game::MapPoint(  t );
-		const auto	v = Game::MapVector( p );
+		const auto	o = GetOffset();
+		const auto	[px,py] = GetPosition();
+		const auto	d = GetDirection();
 
 		printd( "PLAYER\n" );
-		printd( "V2P [%02d,%02d]\n", p.x, p.y );
-		printd( "P2V [%f,%f]\n", v.x, v.z );
-		printd( "F[A/D] : %f, %f\n", t.x, t.z );
+		printd( "POS [%02d,%02d]\n", px, py );
+		printd( "DIR [%c]\n", "NESW"[d] );
+		printd( "F[A/D] : %f, %f\n", o.x, o.y );
 		printd( "B[W/S] : %f\n", GetMoveSpeed() );
 		printd( "R[Q/E] : %f\n", DEG( GetTurnSpeed() ) );
-		printd( "H[SPC] : %f\n", t.y );
+		printd( "H[SPC] : %f\n", o.h );
 		printd( "\n" );
 	}
 #endif

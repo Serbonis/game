@@ -75,12 +75,15 @@ auto SPELL_FIREBALL::fsm_move( FSM_ARGP a )->FSM_RETV{
 
 bool SPELL_FIREBALL::atari_filter( const std::string& s, const ATARIC* c ){
 
-	if ( s == "ENEMY" ) {
-		const auto	p = c->GetAtariOwner<ENEMY_X>();
-		printd( "%p\n",  p );
+	if ( ACTOR_X::atari_filter( s, c ) ) {
+		if ( s == "ENEMY" ) {
+			if ( const auto e = c->GetAtariOwner<ENEMY_X>() ) {
+				return true;
+			}
+		}
 	}
 
-	return true;
+	return false;
 }
 
 // End Of File

@@ -27,11 +27,11 @@ public:
 public:
 	virtual void SetTexture( const class TEXTURE*, std::shared_ptr<opal::SRECTF> = nullptr ) override;
 
-private:
+protected:
 	virtual auto fsm_move( FSM_ARGP )->FSM_RETV;
 
-private:
-	virtual bool atari_filter( const std::string&, const ATARIC* );
+protected:
+	virtual bool atari_filter( const std::string&, const ATARIC* ) override;
 };
 
 // End Of File
