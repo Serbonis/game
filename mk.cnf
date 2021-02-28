@@ -52,6 +52,7 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 	resource.cpp
 	constant.cpp
 	controll.cpp
+	layout.cpp
 
 	0_title {
 		scene_main.cpp
@@ -61,6 +62,13 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 	1_game {
 		scene_main.cpp
 		scene_game.cpp
+
+		scene_frame.cpp
+
+		frame {	-I1_game/
+#			minimap.cpp
+			status.cpp
+		}
 
 		scene_atari.cpp
 

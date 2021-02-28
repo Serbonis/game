@@ -21,6 +21,7 @@ namespace CONTROLL {
 //----------------------------------------
 namespace CONTROLL {
 	bool GameDebug(  void ){ return PADX::KeyTrig( KEY_L );	}
+	bool FrameDebug( void ){ return PADX::KeyTrig( KEY_U );	}
 	bool RestartMap( void ){ return PADX::KeyTrig( KEY_M );	}
 	bool AtariDebug( void ){ return PADX::KeyTrig( KEY_O );	}
 }

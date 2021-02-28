@@ -19,16 +19,16 @@ namespace {
 	RESOURCE::RSRC_MAP<GRID_KIND_WALL, TEXTURE>	texture_w;
 
 	const RESOURCE::FILE_MAP<GRID_KIND_FLOOR>	file_map_texture_f = {
-		{ GRID_KIND_FLOOR::Normal, "PavingStones070_2K_Color.jpg" },
-		{ GRID_KIND_FLOOR::Portal, "pics3153.png" },
+		{ GRID_KIND_FLOOR::Normal, "floor/normal.jpg" },
+		{ GRID_KIND_FLOOR::Portal, "floor/portal.png" },
 	};
 
 	const RESOURCE::FILE_MAP<GRID_KIND_CEIL>	file_map_texture_c = {
-		{ GRID_KIND_CEIL::Normal, "Fabric043_2K_Color.jpg" },
+		{ GRID_KIND_CEIL::Normal, "ceil/normal.jpg" },
 	};
 
 	const RESOURCE::FILE_MAP<GRID_KIND_WALL>	file_map_texture_w = {
-		{ GRID_KIND_WALL::Normal, "PavingStones084_2K_Color.jpg" },
+		{ GRID_KIND_WALL::Normal, "wall/normal.png" },
 	};
 }
 

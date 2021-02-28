@@ -9,6 +9,7 @@
 #include "scene_enemy.hpp"
 #include "scene_spell.hpp"
 #include "scene_grid.hpp"
+#include "scene_frame.hpp"
 
 //----------------------------------------
 // VIEW PORT
@@ -27,52 +28,6 @@ namespace {
 static bool	debug_flag;
 #endif
 
-#include "draw.hpp"
-
-struct VIEWPORT {
-	void operator()( const SRECTF& v                    ){ begin.SetRect( v ); 				}
-	void operator()( float x, float y, float w, float h ){ begin.SetRect( x, y, w, h );		}
-	void operator()( const VECTOR2& p, float w, float h ){ begin.SetRect( p.x, p.y, w, h );	}
-	void operator()( float x, float y, const SSIZE& s   ){ begin.SetRect( x, y, s.w, s.h );	}
-
-	class BEGIN final :
-		public opal::DRAWT,
-		public opal::CRECTF
-	{
-	private:
-		virtual void DrawMain( void ) override { DRAWX::ViewportBegin( *this ); }
-	}	begin;
-
-	class END final : public opal::DRAWT {
-	private:
-		virtual void DrawMain( void ) override { DRAWX::ViewportEnd(); }
-	}	end;
-};
-
-VIEWPORT	viewport;
-
-struct SCISSOR {
-	void operator()( const SRECTF& v                    ){ begin.SetRect( v ); 				}
-	void operator()( float x, float y, float w, float h ){ begin.SetRect( x, y, w, h );		}
-	void operator()( const VECTOR2& p, float w, float h ){ begin.SetRect( p.x, p.y, w, h );	}
-	void operator()( float x, float y, const SSIZE& s   ){ begin.SetRect( x, y, s.w, s.h );	}
-
-	class BEGIN final :
-		public opal::DRAWT,
-		public opal::CRECTF
-	{
-	private:
-		virtual void DrawMain( void ) override { DRAWX::SetScissor( *this ); }
-	}	begin;
-
-	class END final : public opal::DRAWT {
-	private:
-		virtual void DrawMain( void ) override { DRAWX::SetScissor(); }
-	}	end;
-};
-
-SCISSOR	scissor;
-
 //----------------------------------------
 // èâä˙âª
 //----------------------------------------
@@ -80,6 +35,7 @@ SCENE_G::SCENE_G() :
 	step{0},
 	level{0},
 	size{0,0},
+	frame{ std::make_shared<SCENE_FRAME>() },
 	atari{ std::make_shared<SCENE_ATARI>() },
 	camera{std::make_shared<SCENE_CAMERA>()},
 	player{std::make_shared<SCENE_PLAYER>()},
@@ -89,29 +45,24 @@ SCENE_G::SCENE_G() :
 {
 	game	= this;
 
+	frame->Open(  "FRAME"  );
+
 	atari->Open(  "ATARI"  );
 	camera->Open( "CAMERA" );
 
-	viewport.begin.Open( "VP GAME" );
-	viewport( -200, 0, 1600, 1200 );
-	scissor.begin.Open( "SC GAME" );
-	scissor( 0, 400, 1600-400, 1200 );
-	{
-		player->Open( "PLAYER" );
-		enemy->Open(  "ENEMY"  );
-		spell->Open(  "SPELL"  );
-		grid->Open(   "GRID"   );
-	}
-	viewport.end.Open( "VP GAME" );
-	viewport.end.SetPrio( 1 );
-	scissor.end.Open( "SC GAME" );
-	scissor.end.SetPrio( 1 );
+	player->Open( "PLAYER" );
+	enemy->Open(  "ENEMY"  );
+	spell->Open(  "SPELL"  );
+	grid->Open(   "GRID"   );
 
 	camera->SetConnect( player->GetConnect() );
 
 #if OPAL_DEBUG
 	debug_flag = true;
 #endif
+
+	frame->GenerateStatus( 0 );
+	frame->GenerateStatus( 1 );
 }
 
 //----------------------------------------
@@ -119,19 +70,15 @@ SCENE_G::SCENE_G() :
 //----------------------------------------
 SCENE_G::~SCENE_G()
 {
-	scissor.end.Close();
-	viewport.end.Close();
-	{
-		grid->Close();
-		spell->Close();
-		enemy->Close();
-		player->Close();
-	}
-	scissor.begin.Close();
-	viewport.begin.Close();
+	grid->Close();
+	spell->Close();
+	enemy->Close();
+	player->Close();
 
 	camera->Close();
 	atari->Close();
+
+	frame->Close();
 
 	game = nullptr;
 }

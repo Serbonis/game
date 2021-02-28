@@ -19,6 +19,7 @@ namespace CONTROLL {
 //----------------------------------------
 namespace CONTROLL {
 	extern bool GameDebug(  void );
+	extern bool FrameDebug( void );
 	extern bool RestartMap( void );
 	extern bool AtariDebug( void );
 }

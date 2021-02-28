@@ -7,6 +7,7 @@
 //----------------------------------------
 // SCENE GAME
 //----------------------------------------
+class SCENE_FRAME;
 class SCENE_ATARI;
 class SCENE_CAMERA;
 class SCENE_PLAYER;
@@ -47,6 +48,7 @@ namespace SCENE_GAME {
 		opal::SSIZE2U	size;
 
 	private:
+		std::shared_ptr<SCENE_FRAME>	frame;
 		std::shared_ptr<SCENE_ATARI>	atari;
 		std::shared_ptr<SCENE_CAMERA>	camera;
 		std::shared_ptr<SCENE_PLAYER>	player;
