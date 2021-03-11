@@ -56,7 +56,7 @@ SCENE_G::SCENE_G() :
 		const auto	player = object->player;
 
 		player->Generate( id );
-		player->SetName( id, "SERBONIS" );
+		player->SetName( id, "SAMPLE" );
 		frame->SetActor( id, player->GetConnect( id ) );
 		frame->GenerateStatus( id );
 		frame->StatusName(  id, player->GetName( id ) );
