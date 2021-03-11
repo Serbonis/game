@@ -19,16 +19,16 @@ namespace {
 	RESOURCE::RSRC_MAP<GRID_KIND_WALL, TEXTURE>	texture_w;
 
 	const RESOURCE::FILE_MAP<GRID_KIND_FLOOR>	file_map_texture_f = {
-		{ GRID_KIND_FLOOR::Normal, "floor/normal.jpg" },
-		{ GRID_KIND_FLOOR::Portal, "floor/portal.png" },
+		{ GRID_KIND_FLOOR::Normal, { "floor/normal.jpg" } },
+		{ GRID_KIND_FLOOR::Portal, { "floor/portal.png" } },
 	};
 
 	const RESOURCE::FILE_MAP<GRID_KIND_CEIL>	file_map_texture_c = {
-		{ GRID_KIND_CEIL::Normal, "ceil/normal.jpg" },
+		{ GRID_KIND_CEIL::Normal, { "ceil/normal.jpg" } } ,
 	};
 
 	const RESOURCE::FILE_MAP<GRID_KIND_WALL>	file_map_texture_w = {
-		{ GRID_KIND_WALL::Normal, "wall/normal.png" },
+		{ GRID_KIND_WALL::Normal, { "wall/normal.png" } } ,
 	};
 }
 
@@ -39,21 +39,17 @@ namespace RESOURCE::GRID {
 	void SysInit( void ){
 
 		FILEX::Path( file_path );
-		for ( const auto& [k,f] : file_map_texture_f ) { makeshared( texture_f[k] )->Init( f ); }
-		for ( const auto& [k,f] : file_map_texture_c ) { makeshared( texture_c[k] )->Init( f ); }
-		for ( const auto& [k,f] : file_map_texture_w ) { makeshared( texture_w[k] )->Init( f ); }
+		SysInitTexture<GRID_KIND_FLOOR>( texture_f, file_map_texture_f );
+		SysInitTexture<GRID_KIND_CEIL >( texture_c, file_map_texture_c );
+		SysInitTexture<GRID_KIND_WALL >( texture_w, file_map_texture_w );
 		FILEX::Path( nullptr );
 	}
 
 	void SysFree( void ){
 
-		for ( const auto& [k,t] : texture_f ) { t->Free(); }
-		for ( const auto& [k,t] : texture_c ) { t->Free(); }
-		for ( const auto& [k,t] : texture_w ) { t->Free(); }
-
-		texture_f.clear();
-		texture_c.clear();
-		texture_w.clear();
+		SysFreeTexture<GRID_KIND_FLOOR>( texture_f );
+		SysFreeTexture<GRID_KIND_CEIL >( texture_c );
+		SysFreeTexture<GRID_KIND_WALL >( texture_w );
 	}
 }
 
@@ -61,16 +57,17 @@ namespace RESOURCE::GRID {
 // TEXTURE
 //----------------------------------------
 namespace RESOURCE::GRID {
-	template<typename KIND,typename TEXT,typename FMAP>auto Texture( KIND k, TEXT texture, FMAP& file_map_texture )->TEXTURE*{
+	template<typename KIND,typename TEXT,typename FMAP>static auto Texture( KIND k, TEXT& texture, const FMAP& file_map_texture )->TEXTURE*{
 
 		if ( texture.count( k ) ) {
-			return texture.at( k ).get();
+			return GetTexture( texture, k );
 		}
+
 		if ( file_map_texture.count( k ) ) {
 			FILEX::Path( file_path );
-			makeshared( texture[k] )->Init( file_map_texture.at( k ) );
+			InitTexture( k, texture, file_map_texture );
 			FILEX::Path( nullptr );
-			return texture.at( k ).get();
+			return GetTexture( texture, k );
 		}
 
 		return nullptr;

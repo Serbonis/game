@@ -1,21 +1,14 @@
 #pragma once
 //========================================
-// player.hpp
+// player_p.hpp
 //========================================
-#include "com.hpp"
-#include "player_k.hpp"
-#include "player_d.hpp"
-#include "player_p.hpp"
+#include "actor_p.hpp"
 
 //----------------------------------------
-// PLAYER
 //----------------------------------------
-struct PLAYER {
-	PLAYER( PLAYER_KIND k = PLAYER_KIND::Undef ) : kind{k}{}
-	~PLAYER() = default;
-
-	const PLAYER_KIND	kind;
-	std::string			name;
+struct PLAYER_PARAM {
+	PARAMETER::VALMAX	hp;
+	PARAMETER::VALMAX	mp;
 
 	PARAMETER::MOVE		move;
 	PARAMETER::TURN		turn;

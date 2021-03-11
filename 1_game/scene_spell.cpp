@@ -49,7 +49,7 @@ auto SCENE_SPELL::Generate( SPELL_KIND k )->std::shared_ptr<SPELL_X>{
 	if ( const auto p = Make( k ) ) {
 		spell[p] = nullptr;
 		p->Open();
-		p->SetName( Name( k ) );
+		p->SetID( Name( k ) );
 		p->SetTexture( RESOURCE::SPELL::Texture( p->Kind() ) );
 		Game::AtariRegister( "P_SHOT", p );
 		return p;

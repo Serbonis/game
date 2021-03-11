@@ -14,7 +14,7 @@
 //----------------------------------------
 class ACTOR_X :
 	public ACTOR,
-	public ACTOR_M,
+	public virtual ACTOR_M,
 	public ATARIC
 {
 public:

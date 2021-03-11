@@ -31,6 +31,19 @@ private:
 public:
 	virtual void SetTexture( const class TEXTURE*, std::shared_ptr<opal::SRECTF> = nullptr );
 
+public:
+	virtual void SetPlayerParam( const PLAYER_PARAM& ) override;
+
+public:
+	virtual void SetMoveSpeed( float ) override;
+	virtual auto GetMoveSpeed( void ) const->float override;
+
+	virtual void SetTurnSpeed( float ) override;
+	virtual auto GetTurnSpeed( void ) const->float override;
+
+	virtual void SetJumpSpeed( float ) override;
+	virtual auto GetJumpSpeed( void ) const->float override;
+
 private:
 	using PLAYER_M::Spell;
 

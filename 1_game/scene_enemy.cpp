@@ -49,7 +49,7 @@ auto SCENE_ENEMY::Generate( ENEMY_KIND k )->std::shared_ptr<ENEMY_X>{
 	if ( const auto p = Make( k ) ) {
 		enemy[p] = nullptr;
 		p->Open();
-		p->SetName( Name( k ) );
+		p->SetID( Name( k ) );
 		p->SetTexture( RESOURCE::ENEMY::Texture( p->Kind() ) );
 		Game::AtariRegister( "ENEMY", p );
 		return p;

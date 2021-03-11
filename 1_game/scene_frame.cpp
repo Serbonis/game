@@ -7,7 +7,10 @@
 #include "frame/viewport.hpp"
 #include "frame/scissor.hpp"
 #include "frame/minimap.hpp"
+#include "frame/radar.hpp"
 #include "frame/status.hpp"
+
+#include "actor_x.hpp"
 
 #include "layout.hpp"
 
@@ -32,11 +35,16 @@ void SCENE_FRAME::Init( const char* p ){
 	makeshared( viewport );
 	makeshared( scissor  );
 	makeshared( minimap  );
+	makeshared( radar    );
 	makeshared( status   );
 
 	minimap->Open( "MINIMAP", this );
 	minimap->SetTrans( FRAME_MINIMAP_X, FRAME_MINIMAP_Y );
 	minimap->Parent( this );
+
+	radar->Open( "RADAR", this );
+	radar->SetTrans( FRAME_RADAR_X, FRAME_RADAR_Y );
+	radar->Parent( this );
 
 	status->Open( "STATUS", this );
 	status->SetTrans( FRAME_STATUS_X, FRAME_STATUS_Y );
@@ -61,6 +69,7 @@ void SCENE_FRAME::Init( const char* p ){
 void SCENE_FRAME::Free( void ){
 
 	status->Close();
+	radar->Close();
 	minimap->Close();
 
 	scissor->end.Close();
@@ -71,21 +80,10 @@ void SCENE_FRAME::Free( void ){
 	viewport = nullptr;
 	scissor  = nullptr;
 	minimap  = nullptr;
+	radar    = nullptr;
 	status   = nullptr;
 
 	DRAWL::Free();
-}
-
-//----------------------------------------
-//----------------------------------------
-void SCENE_FRAME::GenerateStatus( UINT n ){
-
-	status->Generate( n );
-}
-
-void SCENE_FRAME::DestroyStatus(  UINT n ){
-
-	status->Destroy( n );
 }
 
 //----------------------------------------
@@ -100,9 +98,71 @@ void SCENE_FRAME::ObjFunc( void ){
 	}
 
 	if ( debug_flag ) {
+		radar->Debug();
 		status->Debug();
 	}
 #endif
+
+	for ( const auto& [n,a] : actor ) {
+		if ( !a.expired() ) {
+			const auto	p = a.lock();
+
+			StatusValHP( n, p->GetValHP() );
+			StatusValMP( n, p->GetValMP() );
+			StatusMaxHP( n, p->GetMaxHP() );
+			StatusMaxMP( n, p->GetMaxMP() );
+		}
+	}
 }
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::GenerateStatus( UINT n ){
+
+	status->Generate( n );
+}
+
+void SCENE_FRAME::GenerateStatus( UINT n, std::weak_ptr<const ACTOR_X> p ){
+
+	GenerateStatus( n );
+	SetConnect( n, p );
+}
+
+void SCENE_FRAME::DestroyStatus( UINT n ){
+
+	status->Destroy( n );
+}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::SetConnect( UINT n, std::weak_ptr<const ACTOR_X> p ){
+
+	if ( p.expired() ) {
+		maperase( actor, n );
+	} else {
+		actor[n] = p;
+	}
+}
+
+auto SCENE_FRAME::GetConnect( UINT n ) const->std::weak_ptr<const ACTOR_X>{
+
+	if ( const auto p = mapped( actor, n ); !p.expired() ) {
+		return p;
+	}
+	return {};
+}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::StatusName(  UINT n, const std::string& s ){ status->Name( n, s );	}
+void SCENE_FRAME::StatusName(  UINT n ){ status->Name( n );	}
+
+void SCENE_FRAME::StatusFace(  UINT n, TEXTURE* t ){ status->Face( n, t );	}
+
+void SCENE_FRAME::StatusValHP( UINT n ){ status->ValHP( n );	}
+void SCENE_FRAME::StatusValHP( UINT n, float v, bool f ){ status->ValHP( n, v, f );	}
+void SCENE_FRAME::StatusValMP( UINT n, float v, bool f ){ status->ValMP( n, v, f );	}
+void SCENE_FRAME::StatusMaxHP( UINT n, float m ){ status->MaxHP( n, m );	}
+void SCENE_FRAME::StatusMaxMP( UINT n, float m ){ status->MaxMP( n, m );	}
 
 // End Of File

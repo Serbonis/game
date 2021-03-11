@@ -14,8 +14,10 @@ namespace RESOURCE::PLAYER {
 }
 
 namespace RESOURCE::PLAYER {
-	extern auto Texture( void )->TEXTURE*;
-	extern auto Texture( PLAYER_KIND )->TEXTURE*;
+	extern auto TextureBody( void )->TEXTURE*;
+	extern auto TextureFace( void )->TEXTURE*;
+	extern auto TextureBody( PLAYER_KIND )->TEXTURE*;
+	extern auto TextureFace( PLAYER_KIND )->TEXTURE*;
 }
 
 // End Of File

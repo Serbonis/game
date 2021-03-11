@@ -178,12 +178,45 @@ auto ACTOR_A_ROTATE::GetRotateSpeed( void ) const->float{ return speed;	}
 //----------------------------------------
 // JUMP
 //----------------------------------------
+struct FSM_JUMP : public FSM_FUNCTION {
+	FSM_JUMP() = delete;
+	FSM_JUMP( float s ) :
+		speed{s}
+	{};
+
+	float	speed;
+};
+
 void ACTOR_A_JUMP::Jump( void ){ Jump( speed );	}
-void ACTOR_A_JUMP::Jump( float s ){}
+void ACTOR_A_JUMP::Jump( float s ){
+
+	if ( 1 ) {
+		FSM::SetActor( "FSM" );
+		FSM::SetAction<FSM_JUMP>( "fsm", FSM_BIND( this, &ACTOR_A_JUMP::fsm_jump ), s );
+	}
+}
+
+void ACTOR_A_JUMP::SetJumpSpeed( float s ){ speed = s;	}
+auto ACTOR_A_JUMP::GetJumpSpeed( void ) const->float{ return speed;	}
+
+namespace CONSTANT {
+	constexpr float	GRAVITY_FORCE = 0.005f;
+}
+using namespace CONSTANT;
 
 auto ACTOR_A_JUMP::fsm_jump( FSM_ARGP a )->FSM_RETV{
 
-	return FSM_CONTINUE();
+	const auto	work = FSM_WORK<FSM_JUMP>( a );
+	auto& speed	= work->speed;
+
+	if ( const auto h = actor->GetTransY() + speed ; h < 0 ) {
+		actor->SetTransY( 0 );
+		return FSM_BREAK();
+	} else {
+		speed -= GRAVITY_FORCE;
+		actor->SetTransY( h );
+		return FSM_CONTINUE();
+	}
 }
 
 //----------------------------------------

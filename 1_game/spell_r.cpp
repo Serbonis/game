@@ -17,7 +17,7 @@ namespace {
 	RESOURCE::RSRC_MAP<SPELL_KIND,TEXTURE>	texture;
 
 	const RESOURCE::FILE_MAP<SPELL_KIND>	file_map_texture = {
-		{ SPELL_KIND::FireBall, "fireball.png" },
+		{ SPELL_KIND::FireBall, { "fireball.png" } },
 	};
 }
 
@@ -28,15 +28,13 @@ namespace RESOURCE::SPELL {
 	void SysInit( void ){
 
 		FILEX::Path( file_path );
-		for ( const auto& [k,f] : file_map_texture ) { makeshared( texture[k] )->Init( f ); }
+		SysInitTexture<SPELL_KIND>( texture, file_map_texture );
 		FILEX::Path( nullptr );
 	}
 
 	void SysFree( void ){
 
-		for ( const auto& [k,t] : texture ) { t->Free(); }
-
-		texture.clear();
+		SysFreeTexture<SPELL_KIND>( texture );
 	}
 }
 
@@ -44,17 +42,17 @@ namespace RESOURCE::SPELL {
 // TEXTURE
 //----------------------------------------
 namespace RESOURCE::SPELL {
-	auto Texture( SPELL_KIND k )->TEXTURE*{
+	auto Texture( SPELL_KIND k, UINT n )->TEXTURE*{
 
 		if ( texture.count( k ) ) {
-			return texture.at( k ).get();
+			return GetTexture( texture, k, n );
 		}
 
 		if ( file_map_texture.count( k ) ) {
 			FILEX::Path( file_path );
-			makeshared( texture[k] )->Init( file_map_texture.at( k ) );
+			InitTexture( k, texture, file_map_texture );
 			FILEX::Path( nullptr );
-			return texture.at( k ).get();
+			return GetTexture( texture, k, n );
 		}
 
 		return nullptr;

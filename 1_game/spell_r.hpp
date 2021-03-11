@@ -14,7 +14,7 @@ namespace RESOURCE::SPELL {
 }
 
 namespace RESOURCE::SPELL {
-	extern auto Texture( SPELL_KIND )->TEXTURE*;
+	extern auto Texture( SPELL_KIND, UINT = 0 )->TEXTURE*;
 }
 
 // End Of File

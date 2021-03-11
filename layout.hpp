@@ -25,30 +25,34 @@ namespace LAYOUT {
 	extern const float	FRAME_SCISSOR_Y;
 	extern const float	FRAME_SCISSOR_W;
 	extern const float	FRAME_SCISSOR_H;
+}
 
+namespace LAYOUT {
 	extern const float	FRAME_MINIMAP_X;
 	extern const float	FRAME_MINIMAP_Y;
 	extern const float	FRAME_MINIMAP_W;
 	extern const float	FRAME_MINIMAP_H;
+}
 
+namespace LAYOUT {
+	extern const float	FRAME_RADAR_X;
+	extern const float	FRAME_RADAR_Y;
+	extern const float	FRAME_RADAR_W;
+	extern const float	FRAME_RADAR_H;
+
+	extern const std::vector<UINT>	FRAME_RADAR_WAKU_COLOR;
+	extern const std::vector<UINT>	FRAME_RADAR_ARROW_COLOR;
+	extern const std::vector<UINT>	FRAME_RADAR_FLOOR_COLOR;
+	extern const std::vector<UINT>	FRAME_RADAR_WALL_COLOR;
+}
+
+namespace LAYOUT {
 	extern const float	FRAME_STATUS_X;
 	extern const float	FRAME_STATUS_Y;
 	extern const float	FRAME_STATUS_W;
 	extern const float	FRAME_STATUS_H;
 
-	extern const float	FRAME_STATUS_MARGIN_W;
-	extern const float	FRAME_STATUS_MARGIN_H;
-	extern const float	FRAME_STATUS_OFFSET_X;
-	extern const float	FRAME_STATUS_OFFSET_Y;
-
-	extern const float	FRAME_STATUS_BACK_W;
-	extern const float	FRAME_STATUS_BACK_H;
-	extern const float	FRAME_STATUS_FACE_X;
-	extern const float	FRAME_STATUS_FACE_Y;
-	extern const float	FRAME_STATUS_FACE_W;
-	extern const float	FRAME_STATUS_FACE_H;
-	extern const float	FRAME_STATUS_NAME_X;
-	extern const float	FRAME_STATUS_NAME_Y;
+	extern const std::vector<UINT>	FRAME_STATUS_BACK_COLOR;
 }
 
 // End Of File

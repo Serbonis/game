@@ -3,6 +3,7 @@
 // actor_a.hpp
 //========================================
 #include "fsm.hpp"
+#include "actor_p.hpp"
 
 //----------------------------------------
 // ACTOR_A
@@ -27,11 +28,11 @@ public:
 //----------------------------------------
 // MOVE
 //----------------------------------------
-class ACTOR_A_MOVE : public ACTOR_A {
+class ACTOR_A_MOVE :
+	public ACTOR_A,
+	protected PARAMETER::MOVE
+{
 	using ACTOR_A::ACTOR_A;
-
-private:
-	float	speed;
 
 public:
 	virtual void MoveF( void  );
@@ -50,11 +51,11 @@ public:
 //----------------------------------------
 // TURN
 //----------------------------------------
-class ACTOR_A_TURN : public ACTOR_A {
+class ACTOR_A_TURN :
+	public ACTOR_A,
+	protected PARAMETER::TURN
+{
 	using ACTOR_A::ACTOR_A;
-
-private:
-	float	speed;
 
 public:
 	virtual void TurnL( void  );
@@ -73,11 +74,11 @@ protected:
 //----------------------------------------
 // ROTATE
 //----------------------------------------
-class ACTOR_A_ROTATE : public ACTOR_A {
+class ACTOR_A_ROTATE :
+	public ACTOR_A,
+	protected PARAMETER::ROTATE
+{
 	using ACTOR_A::ACTOR_A;
-
-private:
-	float	speed;
 
 public:
 	virtual void RotateL( void  );
@@ -92,15 +93,19 @@ public:
 //----------------------------------------
 // JUMP
 //----------------------------------------
-class ACTOR_A_JUMP : public ACTOR_A {
+class ACTOR_A_JUMP :
+	public ACTOR_A,
+	protected PARAMETER::JUMP
+{
 	using ACTOR_A::ACTOR_A;
-
-private:
-	float	speed;
 
 public:
 	virtual void Jump( void  );
 	virtual void Jump( float );
+
+public:
+	virtual void SetJumpSpeed( float );
+	virtual auto GetJumpSpeed( void ) const->float;
 
 protected:
 	virtual auto fsm_jump( FSM_ARGP )->FSM_RETV;
@@ -109,13 +114,11 @@ protected:
 //----------------------------------------
 // SPELL
 //----------------------------------------
-class ACTOR_A_SPELL : public ACTOR_A {
+class ACTOR_A_SPELL :
+	public ACTOR_A,
+	protected PARAMETER::SPELL
+{
 	using ACTOR_A::ACTOR_A;
-
-private:
-	float			speed;
-	float			power;
-	opal::VECTOR3	pivot;
 
 public:
 	virtual void SetSpellSpeed( float );

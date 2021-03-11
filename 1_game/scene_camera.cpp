@@ -78,7 +78,8 @@ void SCENE_CAMERA::ObjFunc( void ){
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_CAMERA::SetConnect( const ACTOR_X* a ){ platform->SetConnect( a );	}
+void SCENE_CAMERA::SetConnect( std::weak_ptr<const ACTOR_X> a ){ platform->SetConnect( a );	}
+auto SCENE_CAMERA::GetConnect( void ) const->std::weak_ptr<const ACTOR_X>{ return platform->GetConnect();	}
 
 //----------------------------------------
 //----------------------------------------

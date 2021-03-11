@@ -7,6 +7,7 @@
 //----------------------------------------
 // SCENE CAMERA
 //----------------------------------------
+class ACTOR_X;
 class SCENE_CAMERA final : public opal::WORKL{
 public:
 	void Init( const char* = nullptr ) override;
@@ -22,7 +23,8 @@ private:
 	UINT	number;
 
 public:
-	void SetConnect( const class ACTOR_X* );
+	void SetConnect( std::weak_ptr<const ACTOR_X> );
+	auto GetConnect( void ) const->std::weak_ptr<const ACTOR_X>;
 
 public:
 	void SetCamera( UINT );

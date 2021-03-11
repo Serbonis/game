@@ -17,6 +17,9 @@ void PLATFORM::Init( const char* p ){
 
 	WORKL::Init( p );
 
+	subject.reset();
+
+	point	= {};
 	move_x.InitPromoterPosition();
 	move_z.InitPromoterPosition();
 	SetUpdater( "AXIS-X", [&]{ move_x.PromoterUpdate(); } );
@@ -35,16 +38,19 @@ void PLATFORM::Free( void ){
 
 //----------------------------------------
 //----------------------------------------
-void PLATFORM::SetConnect( const ACTOR_X* a ){ subject = a;	}
+void PLATFORM::SetConnect( std::weak_ptr<const ACTOR_X> a ){ subject = a;	}
+auto PLATFORM::GetConnect( void ) const->std::weak_ptr<const ACTOR_X>{ return subject;	}
 
 //----------------------------------------
 //----------------------------------------
 void PLATFORM::ObjFunc( void ){
 
-	if ( subject ) {
-		SetRotateY( subject->GetRotate() );
+	if ( !subject.expired() ) {
+		const auto	sp = subject.lock();
 
-		if ( const auto p = Game::MapPosition( subject->GetTrans() ); point != p ) {
+		SetRotateY( sp->GetRotate() );
+
+		if ( const auto p = Game::MapPosition( sp->GetTrans() ); point != p ) {
 			const auto	sv = DVECTOR( GetTrans() );
 			const auto	ev = DVECTOR( Game::MapVector( p ) );
 			const auto	mv = []( auto m, auto s, auto e, auto t ){

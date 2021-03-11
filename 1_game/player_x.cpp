@@ -45,6 +45,51 @@ void PLAYER_X::SetTexture( const class TEXTURE* t, std::shared_ptr<opal::SRECTF>
 
 //----------------------------------------
 //----------------------------------------
+void PLAYER_X::SetPlayerParam( const PLAYER_PARAM& p ){
+
+	PLAYER_M::SetPlayerParam( p );
+	PLAYER_C::SetMoveSpeed( p.move.speed );
+	PLAYER_C::SetTurnSpeed( p.turn.speed );
+	PLAYER_C::SetJumpSpeed( p.jump.speed );
+}
+
+//----------------------------------------
+//----------------------------------------
+void PLAYER_X::SetMoveSpeed( float s ){
+
+	PLAYER_M::SetMoveSpeed( s );
+	PLAYER_C::SetMoveSpeed( s );
+}
+
+auto PLAYER_X::GetMoveSpeed( void ) const->float{
+
+	return PLAYER_M::GetMoveSpeed();
+}
+
+void PLAYER_X::SetTurnSpeed( float s ){
+
+	PLAYER_M::SetTurnSpeed( s );
+	PLAYER_C::SetTurnSpeed( s );
+}
+
+auto PLAYER_X::GetTurnSpeed( void ) const->float{
+
+	return PLAYER_M::GetTurnSpeed();
+}
+
+void PLAYER_X::SetJumpSpeed( float s ){
+
+	PLAYER_M::SetJumpSpeed( s );
+	PLAYER_C::SetJumpSpeed( s );
+}
+
+auto PLAYER_X::GetJumpSpeed( void ) const->float{
+
+	return PLAYER_M::GetJumpSpeed();
+}
+
+//----------------------------------------
+//----------------------------------------
 #include "spell_k.hpp"
 
 void PLAYER_X::FireBall( float p, float s ){

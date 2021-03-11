@@ -20,6 +20,16 @@ public:
 	void Destroy( UINT );
 	void Destroy( void );
 
+public:
+	void Name(  UINT, const std::string& );
+	void Name(  UINT );
+	void Face(  UINT, class TEXTURE* = nullptr );
+	void ValHP( UINT );
+	void ValHP( UINT, float, bool = true );
+	void ValMP( UINT, float, bool = true );
+	void MaxHP( UINT, float );
+	void MaxMP( UINT, float );
+
 private:
 	void ObjFunc( void ) override;
 

@@ -14,8 +14,7 @@ using namespace opal;
 // constructor & destructor
 //----------------------------------------
 ACTOR_X::ACTOR_X( void* p ) :
-	ACTOR{p},
-	ACTOR_M{}
+	ACTOR{p}
 {}
 
 //----------------------------------------

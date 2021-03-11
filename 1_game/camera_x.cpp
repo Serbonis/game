@@ -76,7 +76,7 @@ auto CAMERA_X::GetZoom( void ) const->float{ return camera.GetFov();		}
 
 void CAMERA_X::Debug( float ms, float rs, float zs ){
 
-	printd( "CAMERA : %s\n", GetName() );
+	printd( "CAMERA : %s\n", GetID() );
 	printd( "H[R/F] : %f\n", GetArmH() );
 	printd( "V[T/G] : %f\n", GetArmV() );
 	printd( "T[Y/H] : %f\n", DEG( GetTilt() ) );

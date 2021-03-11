@@ -14,7 +14,7 @@ namespace RESOURCE::ENEMY {
 }
 
 namespace RESOURCE::ENEMY {
-	extern auto Texture( ENEMY_KIND )->TEXTURE*;
+	extern auto Texture( ENEMY_KIND, UINT n = 0 )->TEXTURE*;
 }
 
 // End Of File

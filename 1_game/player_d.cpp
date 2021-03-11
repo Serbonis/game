@@ -9,23 +9,38 @@
 using namespace opal;
 
 //----------------------------------------
-// constructor & destructor
+//----------------------------------------
+namespace DATA_PLAYER {
+	const float	PLAYER_MOVE_SPEED	= 0.16F;
+	const float	PLAYER_TURN_SPEED	= RAD( 8.0f );
+	const float	PLAYER_JUMP_SPEED	= 0.16F;
+	const float	PLAYER_SPELL_SPEED	= 0.4f;
+	const float	PLAYER_SPELL_POWER	= 0;
+	const float	PLAYER_SPELL_PIVOT	= 2;
+}
+
+//----------------------------------------
 //----------------------------------------
 namespace {
 	extern const std::unordered_map<PLAYER_KIND,std::string>	player_name;
+	extern const std::unordered_map<PLAYER_KIND,PLAYER_PARAM>	player_param;
+	extern const PLAYER_PARAM	default_player_param;
 }
 
 namespace DATA_PLAYER {
-	auto PlayerName( PLAYER_KIND k )->std::string{ return "";	}
+	auto PlayerName( PLAYER_KIND k )->std::string{
 
-	auto PlayerKind( const std::string& s )->PLAYER_KIND{
-
-		return PLAYER_KIND::Undef;
+		return mapfind( player_name, k ) ? mapat( player_name, k ) : "";
 	}
 
-	auto PlayerKind( void )->PLAYER_KIND{ return PLAYER_KIND::Undef;	}
+	auto PlayerParam( PLAYER_KIND k )->PLAYER_PARAM{
+
+		return mapfind( player_param, k ) ? mapat( player_param, k ) : default_player_param;
+	}
 }
 
+//----------------------------------------
+//----------------------------------------
 namespace {
 	DECLTYPE( player_name ) = {
 	  { PLAYER_KIND::Alex,		"Alex Ander"				},
@@ -55,4 +70,41 @@ namespace {
 	};
 }
 
+namespace {
+	DECLTYPE( default_player_param ) =
+		{
+		 PARAMETER::VALMAX{ 100, 100 },	// HP
+		 PARAMETER::VALMAX{ 100, 100 },	// MP
+		 PARAMETER::MOVE{ DATA_PLAYER::PLAYER_MOVE_SPEED },
+		 PARAMETER::TURN{ DATA_PLAYER::PLAYER_TURN_SPEED },
+		 PARAMETER::JUMP{ DATA_PLAYER::PLAYER_JUMP_SPEED },
+		};
+
+	DECLTYPE( player_param ) = {
+	  { PLAYER_KIND::Alex,		{} },
+	  { PLAYER_KIND::Azizi,		{} },
+	  { PLAYER_KIND::Boris,		{} },
+	  { PLAYER_KIND::Chani,		{} },
+	  { PLAYER_KIND::Daroou,	{} },
+	  { PLAYER_KIND::Elija,		{} },
+	  { PLAYER_KIND::Gando,		{} },
+	  { PLAYER_KIND::Gothmog,	{} },
+	  { PLAYER_KIND::Halk,		{} },
+	  { PLAYER_KIND::Hawk,		{} },
+	  { PLAYER_KIND::Hissssa,	{} },
+	  { PLAYER_KIND::Iaido,		{} },
+	  { PLAYER_KIND::Leif,		{} },
+	  { PLAYER_KIND::Leyla,		{} },
+	  { PLAYER_KIND::Linflas,	{} },
+	  { PLAYER_KIND::Mophus,	{} },
+	  { PLAYER_KIND::Nabi,		{} },
+	  { PLAYER_KIND::Sonja,		{} },
+	  { PLAYER_KIND::Stamm,		{} },
+	  { PLAYER_KIND::Syra,		{} },
+	  { PLAYER_KIND::Tiggy,		{} },
+	  { PLAYER_KIND::Wu,		{} },
+	  { PLAYER_KIND::Wuuf,		{} },
+	  { PLAYER_KIND::Zed,		{} },
+	};
+}
 // End Of File

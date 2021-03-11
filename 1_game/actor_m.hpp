@@ -8,7 +8,10 @@
 // ACTOR_M
 //----------------------------------------
 struct ACTOR_W {
-	int		hitpoints	= 0;
+	int		hp_val	= 0;
+	int		hp_max	= 0;
+	int		mp_val	= 0;
+	int		mp_max	= 0;
 
 	float	size	= 0;
 
@@ -20,6 +23,16 @@ struct ACTOR_W {
 };
 
 class ACTOR_M : protected ACTOR_W {
+public:
+	virtual void SetValHP( int );
+	virtual void SetValMP( int );
+	virtual void SetMaxHP( int );
+	virtual void SetMaxMP( int );
+	virtual auto GetValHP( void ) const->int;
+	virtual auto GetValMP( void ) const->int;
+	virtual auto GetMaxHP( void ) const->int;
+	virtual auto GetMaxMP( void ) const->int;
+
 public:
 	virtual void SetStat( UINT = ACTOR_STAT::Undef );
 	virtual auto GetStat( void ) const->UINT;

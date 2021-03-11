@@ -11,6 +11,9 @@
 #include "scene_grid.hpp"
 #include "scene_frame.hpp"
 
+#include "player_d.hpp"
+#include "player_r.hpp"
+
 //----------------------------------------
 // VIEW PORT
 //----------------------------------------
@@ -55,14 +58,9 @@ SCENE_G::SCENE_G() :
 	spell->Open(  "SPELL"  );
 	grid->Open(   "GRID"   );
 
-	camera->SetConnect( player->GetConnect() );
-
 #if OPAL_DEBUG
 	debug_flag = true;
 #endif
-
-	frame->GenerateStatus( 0 );
-	frame->GenerateStatus( 1 );
 }
 
 //----------------------------------------
@@ -93,11 +91,29 @@ bool SCENE_G::operator()( SCENE_MANAGER* ){
 
 	switch ( step ) {
 	case 0:
+		{
+			player->Generate( 0 );
+			player->SetName( 0, "SERBONIS" );
+
+			const auto	p = player->GetConnect( 0 );
+
+			camera->SetConnect( p );
+
+			frame->GenerateStatus( 0 );
+			frame->SetConnect( 0, p );
+
+			frame->StatusName(  0, player->GetName() );
+			frame->StatusFace(  0, RESOURCE::PLAYER::TextureFace() );
+		}
+		step++;
+		[[fallthrough]];
+
+	case 1:
 		GenerateMap( level );
 		step++;
 		break;
 
-	case 1:
+	case 2:
 		if ( CONTROLL::RestartMap() ) {
 			level = (level+1)%2;
 			DestroyMap();
