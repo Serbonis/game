@@ -65,7 +65,7 @@ public:
 	void Free( void ) override;
 
 public:
-	void Clear( const std::vector<UINT>& );
+	void Clear( void );
 
 public:
 	void Move( UINT, UINT );
@@ -76,9 +76,9 @@ public:
 	void ArrowColor( UINT );
 
 public:
-	void Floor( UINT, UINT, COLOR );
-	void Wall( UINT, UINT, DIX, COLOR );
-	void Corner( UINT, UINT, DIX, COLOR );
+	void Floor(  UINT, UINT,      COLOR = BLANK );
+	void Wall(   UINT, UINT, DIX, COLOR = BLANK );
+	void Corner( UINT, UINT, DIX, COLOR = BLANK );
 };
 
 //----------------------------------------
@@ -87,15 +87,20 @@ void FRAME_RADAR::Init( const char* p ){
 
 	DRAWL::Init( p );
 
-	const auto	s = makeshared( radar );
+	makeshared( radar );
 
-	s->Open( this );
-	s->Parent( this );
+	radar->Open( this );
+	radar->Parent( this );
 
-	Clear();
+	size = {};
 }
 
 void FRAME_RADAR::Free( void ){
+
+	if ( radar ) {
+		radar->Close();
+		radar = nullptr;
+	}
 
 	DRAWL::Free();
 }
@@ -107,24 +112,24 @@ void FRAME_RADAR::Clear( void ){
 	radar->WakuColor(  FRAME_RADAR_WAKU_COLOR[0]  );
 	radar->ArrowColor( FRAME_RADAR_ARROW_COLOR[0] );
 
-	radar->Clear( FRAME_RADAR_FLOOR_COLOR );
-
-	radar->Wall( 1, 1, DIX_N, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Wall( 1, 1, DIX_E, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Wall( 1, 1, DIX_S, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Wall( 1, 1, DIX_W, FRAME_RADAR_WALL_COLOR[0] );
-
-	radar->Corner( 1, 1, DIX_N, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Corner( 1, 1, DIX_E, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Corner( 1, 1, DIX_S, FRAME_RADAR_WALL_COLOR[0] );
-	radar->Corner( 1, 1, DIX_W, FRAME_RADAR_WALL_COLOR[0] );
+	radar->Clear();
 }
+
+//----------------------------------------
+//----------------------------------------
+void FRAME_RADAR::Size( UINT w, UINT h ){ size = {w,h};	}
+
+//----------------------------------------
+//----------------------------------------
+void FRAME_RADAR::Floor(  UINT x, UINT y,        COLOR c ){ radar->Floor(  x, y,    c );	}
+void FRAME_RADAR::Wall(   UINT x, UINT y, DIX d, COLOR c ){ radar->Wall(   x, y, d, c );	}
+void FRAME_RADAR::Corner( UINT x, UINT y, DIX d, COLOR c ){ radar->Corner( x, y, d, c );	}
 
 //----------------------------------------
 //----------------------------------------
 void FRAME_RADAR::Move( UINT x, UINT y ){
 
-	radar->Move( x, y );
+	radar->Move( x, size.h-1 - y );
 }
 
 void FRAME_RADAR::Turn( float r ){
@@ -164,12 +169,12 @@ void RADAR_VIEW::Init( const char* p ){
 
 	arrow.Open( this );
 	arrow.SetTrans( radar_size/2, radar_size/2 );
-	arrow.SetSize( grid_size );
+	arrow.SetSize( grid_size/2 );
 	arrow.SetPivot();
 	arrow.Parent( this );
 
 	dix.Open( this );
-	dix.Parent( &arrow );
+	dix.Parent( &back );
 
 	for ( auto i = 0UL; i < DIX_MAX; i++ ) {
 		texture_dir[i].Init( FILE_PATH + TEXTURE_DIR[i] );
@@ -178,9 +183,9 @@ void RADAR_VIEW::Init( const char* p ){
 
 		dir[i].Open( this );
 		dir[i].SetTexture( texture_dir[i] );
+		dir[i].SetRotate( RAD( 90.f * i ) );
 		dir[i].SetSize( dir_size );
 		dir[i].SetPivot();
-		dir[i].SubFlag( FLAG_R );
 		dir[i].Parent( &dix );
 	}
 
@@ -220,11 +225,11 @@ void RADAR_VIEW::Free( void ){
 
 //---------------------------------------
 //---------------------------------------
-void RADAR_VIEW::Clear( const std::vector<UINT>& c ){
+void RADAR_VIEW::Clear( void ){
 
 	for ( auto i = 0UL; i < FRAME_RADAR_GRID_M; i++ ) {
 		for ( auto j = 0UL; j < FRAME_RADAR_GRID_M; j++ ) {
-			Floor( j, i, c[lattice(i,j)] );
+			Floor( j, i );
 		}
 	}
 }
@@ -272,9 +277,9 @@ inline static auto wall_rect( UINT x, UINT y, DIX d, float s, UINT n, float r )-
 
 		switch ( d ) {
 		case DIX_N:return std::make_shared<SRECTF>( s*x+t, s*y,   w, t );
-		case DIX_W:return std::make_shared<SRECTF>( s*x,   s*y+t, t, w );
-		case DIX_S:return std::make_shared<SRECTF>( s*x+t, s*y+p, w, t );
 		case DIX_E:return std::make_shared<SRECTF>( s*x+p, s*y+t, t, w );
+		case DIX_S:return std::make_shared<SRECTF>( s*x+t, s*y+p, w, t );
+		case DIX_W:return std::make_shared<SRECTF>( s*x,   s*y+t, t, w );
 		default:break;
 		}
 	}

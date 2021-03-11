@@ -32,8 +32,8 @@ public:
 	auto GetCamera( void ) const->UINT;
 
 public:
-	void SetPosition( int, int );
-	void SetDirection( int );
+	void ObjPosition( int, int );
+	void ObjDirection( int );
 };
 
 // End Of File

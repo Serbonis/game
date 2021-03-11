@@ -3,14 +3,13 @@
 //========================================
 #include "scene_frame.hpp"
 #include "scene_game.hpp"
+#include "scene_object.hpp"
 
 #include "frame/viewport.hpp"
 #include "frame/scissor.hpp"
 #include "frame/minimap.hpp"
 #include "frame/radar.hpp"
 #include "frame/status.hpp"
-
-#include "actor_x.hpp"
 
 #include "layout.hpp"
 
@@ -61,12 +60,18 @@ void SCENE_FRAME::Init( const char* p ){
 	viewport->end.SetPrio( PRIO_MAX );
 	scissor->end.SetPrio(  PRIO_MAX );
 
+	object.reset();
+	mapclear( actor );
+
 #if OPAL_DEBUG
 	debug_flag = true;
 #endif
 }
 
 void SCENE_FRAME::Free( void ){
+
+	mapclear( actor );
+	object.reset();
 
 	status->Close();
 	radar->Close();
@@ -113,29 +118,27 @@ void SCENE_FRAME::ObjFunc( void ){
 			StatusMaxMP( n, p->GetMaxMP() );
 		}
 	}
+
+
+	{
+		const auto	o = object.lock();
+		const auto	p = o->player;
+		const auto	[x,y] = p->GetPosition();
+		const auto	r = p->Rotation();
+
+		radar->Move( x, y );
+		radar->Turn( r );
+	}
 }
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_FRAME::GenerateStatus( UINT n ){
-
-	status->Generate( n );
-}
-
-void SCENE_FRAME::GenerateStatus( UINT n, std::weak_ptr<const ACTOR_X> p ){
-
-	GenerateStatus( n );
-	SetConnect( n, p );
-}
-
-void SCENE_FRAME::DestroyStatus( UINT n ){
-
-	status->Destroy( n );
-}
+void SCENE_FRAME::SetObject( std::weak_ptr<const SCENE_OBJECT> o ){ object = o;	}
+auto SCENE_FRAME::GetObject( void ) const->std::weak_ptr<const SCENE_OBJECT>{ return object;	}
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_FRAME::SetConnect( UINT n, std::weak_ptr<const ACTOR_X> p ){
+void SCENE_FRAME::SetActor( UINT n, std::weak_ptr<const ACTOR_X> p ){
 
 	if ( p.expired() ) {
 		maperase( actor, n );
@@ -144,13 +147,76 @@ void SCENE_FRAME::SetConnect( UINT n, std::weak_ptr<const ACTOR_X> p ){
 	}
 }
 
-auto SCENE_FRAME::GetConnect( UINT n ) const->std::weak_ptr<const ACTOR_X>{
+auto SCENE_FRAME::GetActor( UINT n ) const->std::weak_ptr<const ACTOR_X>{
 
 	if ( const auto p = mapped( actor, n ); !p.expired() ) {
 		return p;
 	}
 	return {};
 }
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::GenerateMinimap( void ){}
+void SCENE_FRAME::DestroyMinimap(  void ){}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::GenerateRadar( void ){
+
+	radar->Clear();
+
+	const auto	o = object.lock();
+
+	// GRID
+	{
+		const auto	g = o->grid;
+		const auto	s = g->Size();
+
+		radar->Size( s.w, s.h );
+
+		for ( auto i = 0UL; i < s.h; i++ ) {
+			for ( auto j = 0UL; j < s.w; j++ ) {
+				switch ( const auto f = g->GetFloor( j, i ) ) {
+				default:break;
+				case GRID_KIND_FLOOR::Normal:
+					radar->Floor( j, i, FRAME_RADAR_FLOOR_COLOR[lattice( j, i )] );
+					break;
+
+				case GRID_KIND_FLOOR::Portal:
+					( void )f;
+					//radar->Floor( j, i, f );
+					break;
+				}
+
+				const GRID_KIND_WALL	w[] =
+					{
+					 g->GetWall( j, i, DIX_N ),
+					 g->GetWall( j, i, DIX_E ),
+					 g->GetWall( j, i, DIX_S ),
+					 g->GetWall( j, i, DIX_W ),
+					};
+
+				for ( auto d = 0UL; d < DIX_MAX; d++ ) {
+					switch ( w[d] ) {
+					default:break;
+					case GRID_KIND_WALL::Normal:
+						radar->Wall( j, i, ( DIX )d, FRAME_RADAR_WALL_COLOR[0] );
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+void SCENE_FRAME::DestroyRadar(  void ){}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::GenerateStatus( UINT n ){ status->Generate( n );	}
+void SCENE_FRAME::DestroyStatus(  UINT n ){ status->Destroy(  n );	}
+void SCENE_FRAME::DestroyStatus(  void   ){ status->Destroy();		}
 
 //----------------------------------------
 //----------------------------------------

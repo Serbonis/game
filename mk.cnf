@@ -79,6 +79,8 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		camera_x.cpp
 		camera_p.cpp
 
+		scene_object.cpp
+
 		scene_grid.cpp
 		grid_m.cpp
 		grid_v.cpp

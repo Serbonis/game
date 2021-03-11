@@ -103,16 +103,16 @@ auto SCENE_CAMERA::GetCamera( void ) const->UINT{ return number;	}
 //----------------------------------------
 //
 //----------------------------------------
-void SCENE_CAMERA::SetPosition( int x, int y ){
+void SCENE_CAMERA::ObjPosition( int x, int y ){
 
-	Game::SetPosition( platform, x, y );
+	Game::ObjPosition( platform, x, y );
 
 	*platform = Game::MapPosition( Game::Data2Map( x, y ) );
 }
 
-void SCENE_CAMERA::SetDirection( int d ){
+void SCENE_CAMERA::ObjDirection( int d ){
 
-	Game::SetDirection( platform, d );
+	Game::ObjDirection( platform, d );
 }
 
 // End Of File

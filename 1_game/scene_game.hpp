@@ -10,16 +10,12 @@
 class SCENE_FRAME;
 class SCENE_ATARI;
 class SCENE_CAMERA;
-class SCENE_PLAYER;
-class SCENE_ENEMY;
-class SCENE_SPELL;
-class SCENE_GRID;
+class SCENE_OBJECT;
 
 class ATARIS;
 class ACTOR_X;
 
 class SPELL_DATA;
-struct MAP_DATA;
 
 namespace SCENE_GAME {
 	class SCENE_G {
@@ -29,16 +25,6 @@ namespace SCENE_GAME {
 
 	public:
 		bool operator()( class SCENE_MANAGER* );
-
-	private:
-		void GenerateMap( int = 0 );
-		void DestroyMap( void );
-
-	private:
-		virtual void layout_grid(   const MAP_DATA* ) final;
-		virtual void layout_player( const MAP_DATA* ) final;
-		virtual void layout_enemy(  const MAP_DATA* ) final;
-		virtual void layout_item(   const MAP_DATA* ) final;
 
 	private:
 		UINT			step;
@@ -51,13 +37,14 @@ namespace SCENE_GAME {
 		std::shared_ptr<SCENE_FRAME>	frame;
 		std::shared_ptr<SCENE_ATARI>	atari;
 		std::shared_ptr<SCENE_CAMERA>	camera;
-		std::shared_ptr<SCENE_PLAYER>	player;
-		std::shared_ptr<SCENE_ENEMY>	enemy;
-		std::shared_ptr<SCENE_SPELL>	spell;
-		std::shared_ptr<SCENE_GRID>		grid;
+		std::shared_ptr<SCENE_OBJECT>	object;
 
 	private:
 		static constexpr float	GRID_SIZE = 9.6f;
+
+	public:
+		virtual void BeginLevel( int = 0 ) final;
+		virtual void EndLevel( void ) final;
 
 	public:
 		static auto GridSize( void )->float;
@@ -78,8 +65,8 @@ namespace SCENE_GAME {
 		static auto MapDirection( float )->int;
 
 	public:
-		static void SetPosition(  std::shared_ptr<opal::OBJECT>, int, int );
-		static void SetDirection( std::shared_ptr<opal::OBJECT>, int );
+		static void ObjPosition(  std::shared_ptr<opal::OBJECT>, int, int );
+		static void ObjDirection( std::shared_ptr<opal::OBJECT>, int );
 
 	public:
 		static bool GenerateSpell( const SPELL_DATA& );

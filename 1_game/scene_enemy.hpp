@@ -26,9 +26,11 @@ private:
 	static auto Name( ENEMY_KIND )->std::string;
 
 public:
-	void SetPosition(  std::shared_ptr<ENEMY_X>, int, int );
-	void SetDirection( std::shared_ptr<ENEMY_X>, int  );
-	void SetStatus(    std::shared_ptr<ENEMY_X>, UINT );
+	void ObjPosition(  std::shared_ptr<ENEMY_X>, int, int );
+	void ObjDirection( std::shared_ptr<ENEMY_X>, int  );
+
+public:
+	void SetStatus( std::shared_ptr<ENEMY_X>, UINT );
 
 private:
 	ACTOR_MAPPER<ENEMY_X>	enemy;

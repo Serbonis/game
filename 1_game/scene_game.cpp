@@ -5,11 +5,7 @@
 
 #include "scene_atari.hpp"
 #include "scene_camera.hpp"
-#include "scene_player.hpp"
-#include "scene_enemy.hpp"
-#include "scene_spell.hpp"
-#include "scene_grid.hpp"
-#include "scene_frame.hpp"
+#include "scene_object.hpp"
 
 #include "player_d.hpp"
 #include "player_r.hpp"
@@ -41,26 +37,31 @@ SCENE_G::SCENE_G() :
 	frame{ std::make_shared<SCENE_FRAME>() },
 	atari{ std::make_shared<SCENE_ATARI>() },
 	camera{std::make_shared<SCENE_CAMERA>()},
-	player{std::make_shared<SCENE_PLAYER>()},
-	enemy{ std::make_shared<SCENE_ENEMY>() },
-	spell{ std::make_shared<SCENE_SPELL>() },
-	grid{  std::make_shared<SCENE_GRID>()  }
+	object{std::make_shared<SCENE_OBJECT>()}
 {
 	game	= this;
 
 	frame->Open(  "FRAME"  );
-
 	atari->Open(  "ATARI"  );
 	camera->Open( "CAMERA" );
+	object->Open( "OBJECT" );
 
-	player->Open( "PLAYER" );
-	enemy->Open(  "ENEMY"  );
-	spell->Open(  "SPELL"  );
-	grid->Open(   "GRID"   );
+	frame->SetObject( object );
 
 #if OPAL_DEBUG
 	debug_flag = true;
 #endif
+	{
+		const UINT	id = 0;
+		const auto	player = object->player;
+
+		player->Generate( id );
+		player->SetName( id, "SERBONIS" );
+		frame->SetActor( id, player->GetConnect( id ) );
+		frame->GenerateStatus( id );
+		frame->StatusName(  id, player->GetName( id ) );
+		frame->StatusFace(  id, RESOURCE::PLAYER::TextureFace() );
+	}
 }
 
 //----------------------------------------
@@ -68,14 +69,9 @@ SCENE_G::SCENE_G() :
 //----------------------------------------
 SCENE_G::~SCENE_G()
 {
-	grid->Close();
-	spell->Close();
-	enemy->Close();
-	player->Close();
-
+	object->Close();
 	camera->Close();
 	atari->Close();
-
 	frame->Close();
 
 	game = nullptr;
@@ -91,32 +87,14 @@ bool SCENE_G::operator()( SCENE_MANAGER* ){
 
 	switch ( step ) {
 	case 0:
-		{
-			player->Generate( 0 );
-			player->SetName( 0, "SERBONIS" );
-
-			const auto	p = player->GetConnect( 0 );
-
-			camera->SetConnect( p );
-
-			frame->GenerateStatus( 0 );
-			frame->SetConnect( 0, p );
-
-			frame->StatusName(  0, player->GetName() );
-			frame->StatusFace(  0, RESOURCE::PLAYER::TextureFace() );
-		}
-		step++;
-		[[fallthrough]];
-
-	case 1:
-		GenerateMap( level );
+		BeginLevel( level );
 		step++;
 		break;
 
-	case 2:
+	case 1:
 		if ( CONTROLL::RestartMap() ) {
 			level = (level+1)%2;
-			DestroyMap();
+			EndLevel();
 			step = 0;
 		}
 		break;
@@ -141,90 +119,42 @@ bool SCENE_G::operator()( SCENE_MANAGER* ){
 }
 
 //----------------------------------------
-// マップ生成
+// Game
+//----------------------------------------
+//----------------------------------------
 //----------------------------------------
 #include "map_data.hpp"
 
-void SCENE_G::GenerateMap( int n ){
+void SCENE_G::BeginLevel( int n ){
 
 	if ( 0 <= n && n < ( int )map_data_max ) {
 		if ( const auto m = map_data[n]; m ) {
 			size = { m->map.size };
 
-			layout_grid( m );
-			layout_player( m );
-			layout_enemy( m );
-			layout_item( m );
+			object->GenerateMap( m );
+
+			const auto	[x,y] = m->player.start;
+			const auto	d = m->player.direction;
+
+			camera->ObjPosition( x, y );
+			camera->ObjDirection( d );
 		}
 	}
+
+	camera->SetConnect( object->player->GetConnect( 0 ) );
+
+	frame->GenerateMinimap();
+	frame->GenerateRadar();
 }
 
-// MAP
-void SCENE_G::layout_grid( const MAP_DATA* m ){
+void SCENE_G::EndLevel( void ){
 
-	[[maybe_unused]]const auto	[ox,oy] = m->map.offset;
+	frame->DestroyRadar();
+	frame->DestroyMinimap();
 
-	grid->Generate( size.w, size.h );
-
-	for ( auto i = 0UL; i < size.h; i++ ) {
-		for ( auto j = 0UL; j < size.w; j++ ) {
-			const auto	g = m->GridData( j, i );
-
-			grid->SetPosition( j, i );
-			grid->SetFloor( j, i, g->f );
-			grid->SetCeil(  j, i, g->c );
-			for ( auto d = 0UL; d < DIX_MAX; d++ ) {
-				grid->SetWall( j, i, ( DIX )d, g->w[d] );
-			}
-		}
-	}
+	object->DestroyMap();
 }
 
-// PLAYER
-void SCENE_G::layout_player( const MAP_DATA* m ){
-
-	const auto	[x,y] = m->player.start;
-
-	player->SetPosition( x, y );
-	camera->SetPosition( x, y );
-
-	const auto	d = m->player.direction;
-
-	player->SetDirection( d );
-	camera->SetDirection( d );
-}
-
-// ENEMY
-void SCENE_G::layout_enemy( const MAP_DATA* m ){
-
-	const auto	en = m->enemy.number;
-	for ( auto i = 0UL; i < en; i++ ) {
-		const auto	d = &m->enemy.data[i];
-		const auto	e = enemy->Generate( d->kind );
-		const auto	[x,y] = d->position;
-
-		enemy->SetPosition(  e, x, y );
-		enemy->SetDirection( e, d->direction );
-		enemy->SetStatus(    e, d->stat );
-	}
-}
-
-// ITEM
-void SCENE_G::layout_item( const MAP_DATA* m ){}
-
-//----------------------------------------
-// マップ破棄
-//----------------------------------------
-void SCENE_G::DestroyMap( void ){
-
-	grid->Destroy();
-	spell->Destroy();
-	enemy->Destroy();
-}
-
-//----------------------------------------
-// Game
-//----------------------------------------
 //----------------------------------------
 //----------------------------------------
 auto SCENE_G::GridSize( void )->float{ return GRID_SIZE;	}
@@ -282,7 +212,7 @@ auto SCENE_G::MapDirection( float r )->int{
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_G::SetPosition( std::shared_ptr<OBJECT> o, int x, int y ){
+void SCENE_G::ObjPosition( std::shared_ptr<OBJECT> o, int x, int y ){
 
 	const auto	p = Data2Map( x, y );
 
@@ -290,7 +220,7 @@ void SCENE_G::SetPosition( std::shared_ptr<OBJECT> o, int x, int y ){
 	o->SetTransZ( p.z );
 }
 
-void SCENE_G::SetDirection( std::shared_ptr<OBJECT> o, int d ){
+void SCENE_G::ObjDirection( std::shared_ptr<OBJECT> o, int d ){
 
 	o->SetRotate( Dix2Rad( d ) );
 }
@@ -299,7 +229,7 @@ void SCENE_G::SetDirection( std::shared_ptr<OBJECT> o, int d ){
 //----------------------------------------
 bool SCENE_G::GenerateSpell( const SPELL_DATA& d ){
 
-	return game->spell->Generate( d ) ? true : false;
+	return game->object->GenerateSpell( d ) ? true : false;
 }
 
 //----------------------------------------

@@ -44,6 +44,16 @@ public:
 
 	void SetDirection( UINT, int );
 	void SetDirection( int );
+
+	auto GetPosition( UINT ) const->std::pair<int,int>;
+	auto GetPosition( void ) const->std::pair<int,int>;
+
+	auto GetDirection( UINT ) const->int;
+	auto GetDirection( void ) const->int;
+
+public:
+	auto Rotation( UINT ) const->float;
+	auto Rotation( void ) const->float;
 };
 
 // End Of File

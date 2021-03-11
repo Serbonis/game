@@ -14,9 +14,18 @@ public:
 
 private:
 	std::shared_ptr<class RADAR_VIEW>	radar;
+	opal::SSIZE2U						size;
 
 public:
 	void Clear( void );
+
+public:
+	void Size( UINT, UINT );
+
+public:
+	void Floor(  UINT, UINT,            opal::COLOR = opal::BLANK );
+	void Wall(   UINT, UINT, opal::DIX, opal::COLOR = opal::BLANK );
+	void Corner( UINT, UINT, opal::DIX, opal::COLOR = opal::BLANK );
 
 public:
 	void Move( UINT, UINT );

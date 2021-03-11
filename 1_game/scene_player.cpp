@@ -112,9 +112,19 @@ void SCENE_PLAYER::SetPosition(  int x, int y ){ SetPosition( 0, x, y );	}
 void SCENE_PLAYER::SetPosition( UINT n, int x, int y ){
 
 	if ( const auto p = mapped( player, n ) ) {
-		Game::SetPosition( p, x, y );
+		Game::ObjPosition( p, x, y );
 		p->SetPosition();
 	}
+}
+
+auto SCENE_PLAYER::GetPosition( void ) const->std::pair<int,int>{ return GetPosition( 0 );	}
+
+auto SCENE_PLAYER::GetPosition( UINT n ) const->std::pair<int,int>{
+
+	if ( const auto p = mapped( player, n ) ) {
+		return p->GetPosition();
+	}
+	return {};
 }
 
 //----------------------------------------
@@ -125,9 +135,28 @@ void SCENE_PLAYER::SetDirection( int d ){ SetDirection( 0, d );	}
 void SCENE_PLAYER::SetDirection( UINT n, int d ){
 
 	if ( const auto p = mapped( player, n ) ) {
-		Game::SetDirection( p, d );
+		Game::ObjDirection( p, d );
 		p->SetDirection();
 	}
+}
+
+auto SCENE_PLAYER::GetDirection( void ) const->int{ return GetDirection( 0 );	}
+
+auto SCENE_PLAYER::GetDirection( UINT n ) const->int{
+
+	if ( const auto p = mapped( player, n ) ) {
+		return p->GetDirection();
+	}
+	return 0;
+}
+
+auto SCENE_PLAYER::Rotation( void ) const->float{ return Rotation( 0 );	}
+auto SCENE_PLAYER::Rotation( UINT n ) const->float{
+
+	if ( const auto p = mapped( player, n ) ) {
+		return p->GetRotate();
+	}
+	return 0;
 }
 
 // End Of File

@@ -12,6 +12,7 @@ class FRAME_SCISSOR;
 class FRAME_MINIMAP;
 class FRAME_RADAR;
 class FRAME_STATUS;
+class SCENE_OBJECT;
 class ACTOR_X;
 
 class SCENE_FRAME final : public opal::DRAWL {
@@ -30,16 +31,29 @@ private:
 	std::shared_ptr<FRAME_STATUS>	status;
 
 private:
+	std::weak_ptr<const SCENE_OBJECT>			object;
 	std::map<UINT,std::weak_ptr<const ACTOR_X>>	actor;
 
 public:
-	void GenerateStatus( UINT );
-	void GenerateStatus( UINT, std::weak_ptr<const ACTOR_X> );
-	void DestroyStatus(  UINT );
+	void SetObject( std::weak_ptr<const SCENE_OBJECT> );
+	auto GetObject( void ) const->std::weak_ptr<const SCENE_OBJECT>;
 
 public:
-	void SetConnect( UINT, std::weak_ptr<const ACTOR_X> );
-	auto GetConnect( UINT ) const->std::weak_ptr<const ACTOR_X>;
+	void SetActor( UINT, std::weak_ptr<const ACTOR_X> );
+	auto GetActor( UINT ) const->std::weak_ptr<const ACTOR_X>;
+
+public:
+	void GenerateMinimap( void );
+	void DestroyMinimap(  void );
+
+public:
+	void GenerateRadar( void );
+	void DestroyRadar(  void );
+
+public:
+	void GenerateStatus( UINT );
+	void DestroyStatus(  UINT );
+	void DestroyStatus(  void );
 
 public:
 	void StatusName(  UINT, const std::string& );

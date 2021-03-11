@@ -33,7 +33,7 @@ exe:$(EXES)
 #----------------------------------------
 # Exe/main.exe
 #----------------------------------------
-EXE000_DEPEND := Obj/main.o Obj/game.o Obj/resource.o Obj/constant.o Obj/controll.o Obj/layout.o Obj/0_title/scene_main.o Obj/0_title/scene_game.o Obj/1_game/scene_main.o Obj/1_game/scene_game.o Obj/1_game/scene_frame.o Obj/1_game/frame/radar.o Obj/1_game/frame/status.o Obj/1_game/frame/gauge.o Obj/1_game/frame/face.o Obj/1_game/scene_atari.o Obj/1_game/scene_camera.o Obj/1_game/camera_x.o Obj/1_game/camera_p.o Obj/1_game/scene_grid.o Obj/1_game/grid_m.o Obj/1_game/grid_v.o Obj/1_game/grid_r.o Obj/1_game/grid_d.o Obj/1_game/actor_x.o Obj/1_game/actor_v.o Obj/1_game/actor_a.o Obj/1_game/actor_m.o Obj/1_game/actor_u.o Obj/1_game/aobj.o Obj/1_game/aobj_v.o Obj/1_game/scene_player.o Obj/1_game/player_x.o Obj/1_game/player_v.o Obj/1_game/player_m.o Obj/1_game/player_r.o Obj/1_game/player_d.o Obj/1_game/scene_enemy.o Obj/1_game/enemy_x.o Obj/1_game/enemy_m.o Obj/1_game/enemy_r.o Obj/1_game/enemy_d.o Obj/1_game/enemy/mummy.o Obj/1_game/scene_spell.o Obj/1_game/spell_x.o Obj/1_game/spell_m.o Obj/1_game/spell_r.o Obj/1_game/spell_d.o Obj/1_game/spell/fireball.o Obj/1_game/spell/fireball_v.o Obj/1_game/map.o Obj/1_game/map_data.o
+EXE000_DEPEND := Obj/main.o Obj/game.o Obj/resource.o Obj/constant.o Obj/controll.o Obj/layout.o Obj/0_title/scene_main.o Obj/0_title/scene_game.o Obj/1_game/scene_main.o Obj/1_game/scene_game.o Obj/1_game/scene_frame.o Obj/1_game/frame/radar.o Obj/1_game/frame/status.o Obj/1_game/frame/gauge.o Obj/1_game/frame/face.o Obj/1_game/scene_atari.o Obj/1_game/scene_camera.o Obj/1_game/camera_x.o Obj/1_game/camera_p.o Obj/1_game/scene_object.o Obj/1_game/scene_grid.o Obj/1_game/grid_m.o Obj/1_game/grid_v.o Obj/1_game/grid_r.o Obj/1_game/grid_d.o Obj/1_game/actor_x.o Obj/1_game/actor_v.o Obj/1_game/actor_a.o Obj/1_game/actor_m.o Obj/1_game/actor_u.o Obj/1_game/aobj.o Obj/1_game/aobj_v.o Obj/1_game/scene_player.o Obj/1_game/player_x.o Obj/1_game/player_v.o Obj/1_game/player_m.o Obj/1_game/player_r.o Obj/1_game/player_d.o Obj/1_game/scene_enemy.o Obj/1_game/enemy_x.o Obj/1_game/enemy_m.o Obj/1_game/enemy_r.o Obj/1_game/enemy_d.o Obj/1_game/enemy/mummy.o Obj/1_game/scene_spell.o Obj/1_game/spell_x.o Obj/1_game/spell_m.o Obj/1_game/spell_r.o Obj/1_game/spell_d.o Obj/1_game/spell/fireball.o Obj/1_game/spell/fireball_v.o Obj/1_game/map.o Obj/1_game/map_data.o
 
 EXE000_OBJECT := ${filter %.o %.ro, $(EXE000_DEPEND)}
 Exe/main.exe:$(EXE000_DEPEND) 
@@ -113,6 +113,10 @@ Obj/1_game/camera_x.o:1_game/camera_x.cpp
 	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
 
 Obj/1_game/camera_p.o:1_game/camera_p.cpp 
+	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
+	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
+
+Obj/1_game/scene_object.o:1_game/scene_object.cpp 
 	@if [ ! -d Obj/1_game/ ]; then mkdir -p Obj/1_game/; fi
 	$(CC)  $< $(CPPFLAGS) -c -o $@   -I1_game  $(INCPATH) 
 
