@@ -7,7 +7,8 @@
 #include "rect2.hpp"
 #include "waku2.hpp"
 #include "texture.hpp"
-#include "surface.hpp"
+
+#include "mapper.hpp"
 
 //----------------------------------------
 // FRAME - RADAR
@@ -25,17 +26,16 @@ namespace {
 //----------------------------------------
 class RADAR_VIEW final : public DRAWL {
 private:
-	static constexpr float	FRAME_RADAR_BUFFER	= 1024;
+	static constexpr UINT	FRAME_RADAR_ORDER	= 10;
+	static constexpr float	FRAME_RADAR_BUFFER	= std::pow( 2, FRAME_RADAR_ORDER );
 	static constexpr UINT	FRAME_RADAR_GRID_N	= 7;
 	static constexpr UINT	FRAME_RADAR_GRID_M	= 16;
 	static constexpr float	FRAME_RADAR_GRID_B	= FRAME_RADAR_BUFFER/FRAME_RADAR_GRID_M;
 	static constexpr float	FRAME_RADAR_GRID_R	= 1/16.f;
 
 private:
-	TEXTURE	temp;
 	TEXTURE	texture_arrow;
 	TEXTURE	texture_dir[DIX_MAX];
-	CANVAS	texture_back;
 
 private:
 	RECT2	arrow;
@@ -47,18 +47,7 @@ private:
 
 private:
 	WAKU2	waku;
-	struct BACK : RECT2 {
-		BACK( const WAKU2* w ) : waku{w}{}
-
-		const WAKU2*	waku;
-
-		virtual void DrawMain( void ) override {
-
-			DRAWX::SetScissor( waku->WorldTrans(), *waku );
-			RECT2::DrawMain();
-			DRAWX::SetScissor();
-		}
-	} back{&waku};
+	MAPPER	mapper{FRAME_RADAR_ORDER};
 
 public:
 	void Init( const char* = nullptr ) override;
@@ -158,10 +147,12 @@ void RADAR_VIEW::Init( const char* p ){
 
 	grid_size = radar_size/FRAME_RADAR_GRID_N;
 
-	back.Open( this );
-	back.SetTrans( radar_size/2, radar_size/2 );
-	back.SetSize( grid_size * FRAME_RADAR_GRID_M );
-	back.Parent( this );
+	mapper.Open( this );
+	mapper.SetTrans( radar_size/2, radar_size/2 );
+	mapper.SetSize( grid_size * FRAME_RADAR_GRID_M );
+	mapper.Canvas( SSIZE{radar_size,radar_size} );
+	mapper.Parent( this );
+	SetUpdater( "MAPPER", [&]{ mapper.Canvas( waku.WorldTrans() ); } );
 
 	waku.Open( this );
 	waku.SetSize( radar_size );
@@ -174,7 +165,7 @@ void RADAR_VIEW::Init( const char* p ){
 	arrow.Parent( this );
 
 	dix.Open( this );
-	dix.Parent( &back );
+	dix.Parent( &mapper );
 
 	for ( auto i = 0UL; i < DIX_MAX; i++ ) {
 		texture_dir[i].Init( FILE_PATH + TEXTURE_DIR[i] );
@@ -194,9 +185,6 @@ void RADAR_VIEW::Init( const char* p ){
 	dir[DIX_E].SetTrans( +radar_size/2, 0 );
 	dir[DIX_W].SetTrans( -radar_size/2, 0 );
 
-	texture_back.Init( FRAME_RADAR_BUFFER );
-	back.SetTexture( texture_back );
-
 	texture_arrow.Init( FILE_PATH + TEXTURE_ARROW );
 
 	arrow.SetTexture( texture_arrow );
@@ -207,11 +195,9 @@ void RADAR_VIEW::Init( const char* p ){
 
 void RADAR_VIEW::Free( void ){
 
-	temp.Free();
-	texture_back.Free();
 	texture_arrow.Free();
 
-	back.Close();
+	mapper.Close();
 	waku.Close();
 	arrow.Close();
 	dix.Close();
@@ -238,15 +224,15 @@ void RADAR_VIEW::Clear( void ){
 //---------------------------------------
 void RADAR_VIEW::Move( UINT x, UINT y ){
 
-	back.SetPivot(  ( x + 0.5f ) * grid_size,
-					( y + 0.5f ) * grid_size );
+	mapper.SetPivot(  ( x + 0.5f ) * grid_size,
+					  ( y + 0.5f ) * grid_size );
 }
 
 //---------------------------------------
 //---------------------------------------
 void RADAR_VIEW::Turn( float r ){
 
-	back.SetRotate( r );
+	mapper.SetRotate( r );
 }
 
 //---------------------------------------
@@ -306,27 +292,21 @@ inline static auto corner_rect( UINT x, UINT y, DIX d, float s, UINT n, float r 
 void RADAR_VIEW::Floor( UINT x, UINT y, COLOR c ){
 
 	if ( const auto p = floor_rect( x, y, FRAME_RADAR_GRID_B ) ) {
-		if ( SURFACE_LOCK lock{texture_back} ) {
-			lock.SetPixel( p->x, p->y, p->w, p->h, c );
-		}
+		mapper.Mapping( p->x, p->y, p->w, p->h, c );
 	}
 }
 
 void RADAR_VIEW::Wall( UINT x, UINT y, DIX d, COLOR c ){
 
 	if ( const auto p = wall_rect( x, y, d, FRAME_RADAR_GRID_B, FRAME_RADAR_GRID_M, FRAME_RADAR_GRID_R ) ) {
-		if ( SURFACE_LOCK lock{texture_back} ) {
-			lock.SetPixel( p->x, p->y, p->w, p->h, c );
-		}
+		mapper.Mapping( p->x, p->y, p->w, p->h, c );
 	}
 }
 
 void RADAR_VIEW::Corner( UINT x, UINT y, DIX d, COLOR c ){
 
 	if ( const auto p = corner_rect( x, y, d, FRAME_RADAR_GRID_B, FRAME_RADAR_GRID_M, FRAME_RADAR_GRID_R ) ) {
-		if ( SURFACE_LOCK lock{texture_back} ) {
-			lock.SetPixel( p->x, p->y, p->w, p->h, c );
-		}
+		mapper.Mapping( p->x, p->y, p->w, p->h, c );
 	}
 }
 

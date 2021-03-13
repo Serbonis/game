@@ -66,9 +66,9 @@ void ACTOR_X::SetDirection( float d ){
 
 void ACTOR_X::SetPosition( void ){
 
-	const auto	[x,y,z] = GetTrans();
+	const auto	v = GetTrans();
 
-	SetPosition( x, z, y );
+	SetPosition( v.x, v.z, v.y );
 }
 
 auto ACTOR_X::GetPosition( void ) const->std::pair<int,int>{

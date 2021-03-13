@@ -71,6 +71,7 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 			status.cpp
 			gauge.cpp
 			face.cpp
+			mapper.cpp
 		}
 
 		scene_atari.cpp
