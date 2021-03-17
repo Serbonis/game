@@ -25,6 +25,7 @@ void SCENE_GRID::Init( const char* p ){
 
 	makeshared( grid );
 
+	name	= "";
 	size	= {};
 	offset	= {};
 }
@@ -81,12 +82,28 @@ void SCENE_GRID::Destroy( void ){
 	offset	= {};
 }
 
+//----------------------------------------
+//----------------------------------------
+void SCENE_GRID::MapName( const std::string& s ){ name = s;		}
+auto SCENE_GRID::MapName( void ) const->std::string{ return name;	}
 
 //----------------------------------------
 //
 //----------------------------------------
 auto SCENE_GRID::Size(   void ) const->opal::SSIZE2U{ return size;		}
 auto SCENE_GRID::Offset( void ) const->opal::SSIZE2U{ return offset;	}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_GRID::Eliminate( int x, int y, float r ){
+
+	for ( auto& l : *grid ) {
+		for ( auto& g : l ) {
+			g->SetEliminate( false );
+		}
+	}
+}
+
 
 //----------------------------------------
 //
@@ -129,6 +146,13 @@ void SCENE_GRID::SetWall(  UINT x, UINT y, DIX d, GRID_KIND_WALL k ){
 	}
 }
 
+void SCENE_GRID::SetCorner( UINT x, UINT y ){
+
+	if ( const auto g = Grid( x, y ) ) {
+		g->SetCorner();
+	}
+}
+
 auto SCENE_GRID::GetFloor( UINT x, UINT y ) const->GRID_KIND_FLOOR{
 
 	if ( const auto g = Grid( x, y ) ) {
@@ -151,6 +175,14 @@ auto SCENE_GRID::GetWall(  UINT x, UINT y, DIX d ) const->GRID_KIND_WALL{
 		return g->GetWall( d );
 	}
 	return GRID_KIND_WALL::Undef;
+}
+
+auto SCENE_GRID::GetCorner(  UINT x, UINT y ) const->UINT{
+
+	if ( const auto g = Grid( x, y ) ) {
+		return g->GetCorner();
+	}
+	return DIC_X;
 }
 
 // End Of File

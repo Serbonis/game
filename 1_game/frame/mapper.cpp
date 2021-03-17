@@ -56,4 +56,44 @@ void MAPPER::DrawMain( void ){
 	DRAWX::SetScissor();
 }
 
+//----------------------------------------
+//----------------------------------------
+auto MAPPER::FloorRect( UINT x, UINT y, float s )->std::shared_ptr<SRECTF>{
+
+	return std::make_shared<SRECTF>( s*x, s*y, s, s );
+}
+
+auto MAPPER::WallRect( UINT x, UINT y, DIX d, float s, UINT n, float r )->std::shared_ptr<SRECTF>{
+
+	const auto	t = s * r;
+	const auto	p = s - t;
+	const auto	w = s - t * 2;
+
+	switch ( d ) {
+	case DIX_N:return std::make_shared<SRECTF>( s*x+t, s*y,   w, t );
+	case DIX_E:return std::make_shared<SRECTF>( s*x+p, s*y+t, t, w );
+	case DIX_S:return std::make_shared<SRECTF>( s*x+t, s*y+p, w, t );
+	case DIX_W:return std::make_shared<SRECTF>( s*x,   s*y+t, t, w );
+	default:break;
+	}
+
+	return nullptr;
+}
+
+auto MAPPER::CornerRect( UINT x, UINT y, UINT c, float s, UINT n, float r )->std::shared_ptr<SRECTF>{
+
+	const auto	t = s * r;
+	const auto	p = s - t;
+
+	switch ( c ) {
+	case DIC_I:return std::make_shared<SRECTF>( s*x,   s*y,   t, t );
+	case DIC_U:return std::make_shared<SRECTF>( s*x+p, s*y,   t, t );
+	case DIC_T:return std::make_shared<SRECTF>( s*x+p, s*y+p, t, t );
+	case DIC_H:return std::make_shared<SRECTF>( s*x,   s*y+p, t, t );
+	default:break;
+	}
+
+	return nullptr;
+}
+
 // End Of File

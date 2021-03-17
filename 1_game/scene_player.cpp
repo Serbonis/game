@@ -37,7 +37,7 @@ void SCENE_PLAYER::ObjFunc( void ){}
 //----------------------------------------
 auto SCENE_PLAYER::Generate( UINT n, PLAYER_KIND k )->std::shared_ptr<PLAYER_X>{
 
-	if ( const auto p = PRIMS::MakeSharedPrim( player[n] ) ) {
+	if ( const auto p = PRIMS::MakeSharedPrim( player[n], n ) ) {
 		p->SetTexture( RESOURCE::PLAYER::TextureBody() );
 
 		p->SetPlayerParam( DATA_PLAYER::PlayerParam( k ) );
@@ -107,12 +107,12 @@ auto SCENE_PLAYER::GetName( UINT n ) const->std::string{
 //----------------------------------------
 //
 //----------------------------------------
-void SCENE_PLAYER::SetPosition(  int x, int y ){ SetPosition( 0, x, y );	}
+void SCENE_PLAYER::SetPosition(  int x, int y, DIM m ){ SetPosition( 0, x, y, m );	}
 
-void SCENE_PLAYER::SetPosition( UINT n, int x, int y ){
+void SCENE_PLAYER::SetPosition( UINT n, int x, int y, DIM m ){
 
 	if ( const auto p = mapped( player, n ) ) {
-		Game::ObjPosition( p, x, y );
+		Game::ObjPosition( p, x, y, m );
 		p->SetPosition();
 	}
 }

@@ -3,29 +3,23 @@
 // radar.hpp
 //========================================
 #include "drawx.hpp"
+#include "mapper_v.hpp"
 
 //----------------------------------------
 // FRAME - RADAR
 //----------------------------------------
-class FRAME_RADAR final : public opal::DRAWL {
+class FRAME_RADAR final :
+	public opal::DRAWL,
+	public MAPPER_VIEW<class RADAR_VIEW>
+{
+	using MAPPER_VIEW::size;
+
 public:
 	void Init( const char* = nullptr ) override;
 	void Free( void ) override;
 
-private:
-	std::shared_ptr<class RADAR_VIEW>	radar;
-	opal::SSIZE2U						size;
-
 public:
 	void Clear( void );
-
-public:
-	void Size( UINT, UINT );
-
-public:
-	void Floor(  UINT, UINT,            opal::COLOR = opal::BLANK );
-	void Wall(   UINT, UINT, opal::DIX, opal::COLOR = opal::BLANK );
-	void Corner( UINT, UINT, opal::DIX, opal::COLOR = opal::BLANK );
 
 public:
 	void Move( UINT, UINT );

@@ -35,9 +35,11 @@ namespace {
 	DECLTYPE( grid_kind_floor ) = {
 			{ "Å†", GRID_KIND_FLOOR::Normal },
 			{ "Åù", GRID_KIND_FLOOR::Portal },
+			{ "Å~", GRID_KIND_FLOOR::Block	},
 	};
 	DECLTYPE( grid_kind_ceil  ) = {
 			{ "Å†", GRID_KIND_CEIL::Normal },
+			{ "Åù", GRID_KIND_CEIL::Normal },
 	};
 	DECLTYPE( grid_kind_wall  ) = {
 			{ "Ñ™", GRID_KIND_WALL::Normal },

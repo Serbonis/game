@@ -65,7 +65,7 @@ namespace SCENE_GAME {
 		static auto MapDirection( float )->int;
 
 	public:
-		static void ObjPosition(  std::shared_ptr<opal::OBJECT>, int, int );
+		static void ObjPosition(  std::shared_ptr<opal::OBJECT>, int, int, opal::DIM = opal::DIM_0 );
 		static void ObjDirection( std::shared_ptr<opal::OBJECT>, int );
 
 	public:

@@ -32,6 +32,10 @@ namespace LAYOUT {
 	extern const float	FRAME_MINIMAP_Y;
 	extern const float	FRAME_MINIMAP_W;
 	extern const float	FRAME_MINIMAP_H;
+
+	extern const std::vector<UINT>	FRAME_MINIMAP_WAKU_COLOR;
+	extern const std::vector<UINT>	FRAME_MINIMAP_FLOOR_COLOR;
+	extern const std::vector<UINT>	FRAME_MINIMAP_WALL_COLOR;
 }
 
 namespace LAYOUT {

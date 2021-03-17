@@ -66,12 +66,15 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		scene_frame.cpp
 
 		frame {	-I1_game/
-#			minimap.cpp
+			minimap.cpp
+			minimap_v.cpp
 			radar.cpp
+			radar_v.cpp
 			status.cpp
 			gauge.cpp
 			face.cpp
 			mapper.cpp
+			mapper_v.cpp
 		}
 
 		scene_atari.cpp
@@ -83,6 +86,7 @@ Exe/main.exe: LIB=game_dx11 game draw_dx11 draw dxtk dxtx call opal
 		scene_object.cpp
 
 		scene_grid.cpp
+		grid_k.cpp
 		grid_m.cpp
 		grid_v.cpp
 		grid_r.cpp

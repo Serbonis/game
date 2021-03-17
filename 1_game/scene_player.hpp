@@ -39,8 +39,8 @@ public:
 	auto GetName( void ) const->std::string;
 
 public:
-	void SetPosition( UINT, int, int );
-	void SetPosition( int, int );
+	void SetPosition( UINT, int, int, opal::DIM = opal::DIM_0 );
+	void SetPosition( int, int, opal::DIM = opal::DIM_0 );
 
 	void SetDirection( UINT, int );
 	void SetDirection( int );

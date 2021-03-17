@@ -26,7 +26,7 @@ private:
 	static auto Name( ENEMY_KIND )->std::string;
 
 public:
-	void ObjPosition(  std::shared_ptr<ENEMY_X>, int, int );
+	void ObjPosition(  std::shared_ptr<ENEMY_X>, int, int, opal::DIM = opal::DIM_0 );
 	void ObjDirection( std::shared_ptr<ENEMY_X>, int  );
 
 public:

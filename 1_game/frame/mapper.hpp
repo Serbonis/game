@@ -32,6 +32,11 @@ public:
 
 private:
 	virtual void DrawMain( void ) override;
+
+public:
+	static auto FloorRect(  UINT, UINT,            float )->std::shared_ptr<opal::SRECTF>;
+	static auto WallRect(   UINT, UINT, opal::DIX, float, UINT, float )->std::shared_ptr<opal::SRECTF>;
+	static auto CornerRect( UINT, UINT, UINT,      float, UINT, float )->std::shared_ptr<opal::SRECTF>;
 };
 
 // End Of File

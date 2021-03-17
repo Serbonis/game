@@ -22,9 +22,10 @@ public:
 	virtual float operator =( float );
 
 public:
-	virtual void SetFloor( GRID_KIND_FLOOR = GRID_KIND_FLOOR::Undef ) final;
-	virtual void SetCeil(  GRID_KIND_CEIL = GRID_KIND_CEIL::Undef ) final;
-	virtual void SetWall(  opal::DIX, GRID_KIND_WALL = GRID_KIND_WALL::Undef ) final;
+	virtual void Floor( GRID_KIND_FLOOR = GRID_KIND_FLOOR::Undef ) final;
+	virtual void Ceil(  GRID_KIND_CEIL = GRID_KIND_CEIL::Undef ) final;
+	virtual void Wall(  opal::DIX, GRID_KIND_WALL = GRID_KIND_WALL::Undef ) final;
+	virtual void Corner( UINT ) final;
 };
 
 // End Of File

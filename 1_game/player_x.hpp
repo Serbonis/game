@@ -17,9 +17,15 @@ class PLAYER_X :
 	public PLAYER_M,
 	public PLAYER_C
 {
+private:
+	explicit PLAYER_X() = delete;
+
 public:
-	explicit PLAYER_X() = default;
+	explicit PLAYER_X( UINT );
 	virtual ~PLAYER_X() = default;
+
+protected:
+	UINT	index;
 
 public:
 	virtual void Init( const char* = nullptr ) override;

@@ -38,17 +38,39 @@ namespace CONTROLL {
 }
 
 namespace CONTROLL {
-	bool PlayerDebug( void ){ return PADX::KeyPush( KEY_I );	}
+	static inline UINT keycode( const std::string& s, UINT n ){
+		static const std::unordered_map<std::string,std::vector<UINT>>	keymap
+			= {
+			   { "Debug",		{ KEY_I } },
+			   { "MoveF",		{ KEY_W } },
+			   { "MoveB",		{ KEY_S } },
+			   { "MoveL",		{ KEY_A } },
+			   { "MoveR",		{ KEY_D } },
+			   { "TurnL",		{ KEY_Q } },
+			   { "TurnR",		{ KEY_E } },
+			   { "Jump",		{ KEY_SPACE } },
+			   { "FireBall",	{ KEY_B } },
+		};
 
-	bool PlayerMoveF(    void ){ return PADX::KeyPush( KEY_W );		}
-	bool PlayerMoveB(    void ){ return PADX::KeyPush( KEY_S );		}
-	bool PlayerMoveL(    void ){ return PADX::KeyPush( KEY_A );		}
-	bool PlayerMoveR(    void ){ return PADX::KeyPush( KEY_D );		}
-	bool PlayerTurnL(    void ){ return PADX::KeyTrig( KEY_Q );		}
-	bool PlayerTurnR(    void ){ return PADX::KeyTrig( KEY_E );		}
-	bool PlayerJump(     void ){ return PADX::KeyPush( KEY_SPACE );	}
+		if ( mapfind( keymap, s ) ) {
+			if ( const auto m = mapped( keymap, s ); n < m.size() ) {
+				return m.at( n );
+			}
+		}
 
-	bool PlayerFireBall( void ){ return PADX::KeyTrig( KEY_B );		}
+		return KEY_NULL;
+	}
+
+	bool PlayerDebug( UINT n ){ return PADX::KeyPush( keycode( "Debug", n ) );			}
+
+	bool PlayerMoveF(    UINT n ){ return PADX::KeyPush( keycode( "MoveF", n ) );		}
+	bool PlayerMoveB(    UINT n ){ return PADX::KeyPush( keycode( "MoveB", n ) );		}
+	bool PlayerMoveL(    UINT n ){ return PADX::KeyPush( keycode( "MoveL", n ) );		}
+	bool PlayerMoveR(    UINT n ){ return PADX::KeyPush( keycode( "MoveR", n ) );		}
+	bool PlayerTurnL(    UINT n ){ return PADX::KeyTrig( keycode( "TurnL", n ) );		}
+	bool PlayerTurnR(    UINT n ){ return PADX::KeyTrig( keycode( "TurnR", n ) );		}
+	bool PlayerJump(     UINT n ){ return PADX::KeyPush( keycode( "Jump", n ) );		}
+	bool PlayerFireBall( UINT n ){ return PADX::KeyTrig( keycode( "FireBall", n ) );	}
 }
 
 // End Of File

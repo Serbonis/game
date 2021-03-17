@@ -33,10 +33,18 @@ namespace LAYOUT {
 //----------------------------------------
 //----------------------------------------
 namespace LAYOUT {
-	const float	FRAME_MINIMAP_X		= 0;
-	const float	FRAME_MINIMAP_Y		= 0;
-	const float	FRAME_MINIMAP_W		= 0;
-	const float	FRAME_MINIMAP_H		= 0;
+	static constexpr float	minimap_mw	= 16.0f;
+	static constexpr float	minimap_mh	= 16.0f;
+	static constexpr float	minimap_nh	= 32.0f;
+
+	const float	FRAME_MINIMAP_X			= minimap_mw;
+	const float	FRAME_MINIMAP_Y			= minimap_mh;
+	const float	FRAME_MINIMAP_W			= FRAME_SCISSOR_W - minimap_mw * 2;
+	const float	FRAME_MINIMAP_H			= FRAME_MASK_H    - minimap_mh - minimap_nh;
+
+	const std::vector<UINT>	FRAME_MINIMAP_WAKU_COLOR	= { WHITE };
+	const std::vector<UINT>	FRAME_MINIMAP_FLOOR_COLOR	= { WHITE, GRAY };
+	const std::vector<UINT>	FRAME_MINIMAP_WALL_COLOR	= { MAGENTA };
 }
 
 //----------------------------------------

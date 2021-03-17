@@ -56,7 +56,19 @@ SCENE_G::SCENE_G() :
 		const auto	player = object->player;
 
 		player->Generate( id );
-		player->SetName( id, "SAMPLE" );
+		player->SetName( id, "ROCK" );
+		frame->SetActor( id, player->GetConnect( id ) );
+		frame->GenerateStatus( id );
+		frame->StatusName(  id, player->GetName( id ) );
+		frame->StatusFace(  id, RESOURCE::PLAYER::TextureFace() );
+	}
+
+	{
+		const UINT	id = 1;
+		const auto	player = object->player;
+
+		player->Generate( id );
+		player->SetName( id, "ACE" );
 		frame->SetActor( id, player->GetConnect( id ) );
 		frame->GenerateStatus( id );
 		frame->StatusName(  id, player->GetName( id ) );
@@ -133,8 +145,8 @@ void SCENE_G::BeginLevel( int n ){
 
 			object->GenerateMap( m );
 
-			const auto	[x,y] = m->player.start;
-			const auto	d = m->player.direction;
+			const auto	[x,y] = m->player.data->position;
+			const auto	d = m->player.data->direction;
 
 			camera->ObjPosition( x, y );
 			camera->ObjDirection( d );
@@ -212,12 +224,13 @@ auto SCENE_G::MapDirection( float r )->int{
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_G::ObjPosition( std::shared_ptr<OBJECT> o, int x, int y ){
+void SCENE_G::ObjPosition( std::shared_ptr<OBJECT> o, int x, int y, DIM m ){
 
 	const auto	p = Data2Map( x, y );
+	const auto	[ox,oy] = DIM_Offset( m, GridSize() );
 
-	o->SetTransX( p.x );
-	o->SetTransZ( p.z );
+	o->SetTransX( p.x + ox );
+	o->SetTransZ( p.z + oy );
 }
 
 void SCENE_G::ObjDirection( std::shared_ptr<OBJECT> o, int d ){

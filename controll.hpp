@@ -36,17 +36,17 @@ namespace CONTROLL {
 }
 
 namespace CONTROLL {
-	extern bool PlayerDebug( void );
+	extern bool PlayerDebug( UINT );
 
-	extern bool PlayerMoveF(    void );
-	extern bool PlayerMoveB(    void );
-	extern bool PlayerMoveL(    void );
-	extern bool PlayerMoveR(    void );
-	extern bool PlayerTurnL(    void );
-	extern bool PlayerTurnR(    void );
-	extern bool PlayerJump(     void );
+	extern bool PlayerMoveF(    UINT );
+	extern bool PlayerMoveB(    UINT );
+	extern bool PlayerMoveL(    UINT );
+	extern bool PlayerMoveR(    UINT );
+	extern bool PlayerTurnL(    UINT );
+	extern bool PlayerTurnR(    UINT );
+	extern bool PlayerJump(     UINT );
 
-	extern bool PlayerFireBall( void );
+	extern bool PlayerFireBall( UINT );
 }
 
 // End Of File

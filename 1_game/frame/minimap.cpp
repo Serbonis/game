@@ -1,18 +1,18 @@
 //========================================
-// radar.cpp
+// minimap.cpp
 //========================================
-#include "radar.hpp"
-#include "radar_v.hpp"
+#include "minimap.hpp"
+#include "minimap_v.hpp"
 
 //----------------------------------------
-// FRAME - RADAR
+// FRAME - MINIMAP
 //----------------------------------------
 using namespace opal;
 using namespace LAYOUT;
 
 //----------------------------------------
 //----------------------------------------
-void FRAME_RADAR::Init( const char* p ){
+void FRAME_MINIMAP::Init( const char* p ){
 
 	DRAWL::Init( p );
 
@@ -20,9 +20,11 @@ void FRAME_RADAR::Init( const char* p ){
 
 	view->Open( this );
 	view->Parent( this );
+
+	size = {};
 }
 
-void FRAME_RADAR::Free( void ){
+void FRAME_MINIMAP::Free( void ){
 
 	if ( view ) {
 		view->Close();
@@ -34,34 +36,35 @@ void FRAME_RADAR::Free( void ){
 
 //----------------------------------------
 //----------------------------------------
-void FRAME_RADAR::Clear( void ){
+void FRAME_MINIMAP::Clear( void ){
 
 	MAPPER_VIEW::Clear();
 
-	view->WakuColor(  FRAME_RADAR_WAKU_COLOR[0]  );
-	view->ArrowColor( FRAME_RADAR_ARROW_COLOR[0] );
+	view->WakuColor(  FRAME_MINIMAP_WAKU_COLOR[0]  );
 }
 
 //----------------------------------------
 //----------------------------------------
-void FRAME_RADAR::Move( UINT x, UINT y ){
+void FRAME_MINIMAP::Move( float x, float y ){
 
-	view->Move( x, size.h-1 - y );
-}
-
-void FRAME_RADAR::Turn( float r ){
-
-	view->Turn( r );
+	view->Move( x, y );
 }
 
 //----------------------------------------
 //----------------------------------------
-void FRAME_RADAR::ObjFunc( void ){}
+void FRAME_MINIMAP::MapName( const std::string& s ){
+
+	view->MapName( s );
+}
+
+//----------------------------------------
+//----------------------------------------
+void FRAME_MINIMAP::ObjFunc( void ){}
 
 //----------------------------------------
 //----------------------------------------
 #if OPAL_DEBUG
-void FRAME_RADAR::Debug( void ) const {}
+void FRAME_MINIMAP::Debug( void ) const {}
 #endif
 
 // End Of File

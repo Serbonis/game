@@ -11,6 +11,12 @@ using namespace opal;
 
 //----------------------------------------
 //----------------------------------------
+PLAYER_X::PLAYER_X( UINT n ) :
+	index{n}
+{}
+
+//----------------------------------------
+//----------------------------------------
 void PLAYER_X::Init( const char* p ){
 
 	ACTOR_X::Init( p );
@@ -126,12 +132,12 @@ void PLAYER_X::ObjFunc( void ){
 		return;
 	}
 
-	if ( CONTROLL::PlayerDebug() ) {
+	if ( CONTROLL::PlayerDebug( index ) ) {
 		const auto	o = GetOffset();
 		const auto	[px,py] = GetPosition();
 		const auto	d = GetDirection();
 
-		printd( "PLAYER\n" );
+		printd( "PLAYER[%d]\n", index );
 		printd( "POS [%02d,%02d]\n", px, py );
 		printd( "DIR [%c]\n", "NESW"[d] );
 		printd( "F[A/D] : %f, %f\n", o.x, o.y );
@@ -142,15 +148,15 @@ void PLAYER_X::ObjFunc( void ){
 	}
 #endif
 
-	if ( CONTROLL::PlayerMoveF() ) { MoveF();	}
-	if ( CONTROLL::PlayerMoveB() ) { MoveB();	}
-	if ( CONTROLL::PlayerMoveL() ) { MoveL();	}
-	if ( CONTROLL::PlayerMoveR() ) { MoveR();	}
-	if ( CONTROLL::PlayerTurnL() ) { TurnL(); 	}
-	if ( CONTROLL::PlayerTurnR() ) { TurnR(); 	}
-	if ( CONTROLL::PlayerJump()  ) { Jump();	}
+	if ( CONTROLL::PlayerMoveF( index ) ) { MoveF();	}
+	if ( CONTROLL::PlayerMoveB( index ) ) { MoveB();	}
+	if ( CONTROLL::PlayerMoveL( index ) ) { MoveL();	}
+	if ( CONTROLL::PlayerMoveR( index ) ) { MoveR();	}
+	if ( CONTROLL::PlayerTurnL( index ) ) { TurnL(); 	}
+	if ( CONTROLL::PlayerTurnR( index ) ) { TurnR(); 	}
+	if ( CONTROLL::PlayerJump(  index ) ) { Jump();		}
 
-	if ( CONTROLL::PlayerFireBall() ) { FireBall();	}
+	if ( CONTROLL::PlayerFireBall( index ) ) { FireBall();	}
 }
 
 //----------------------------------------

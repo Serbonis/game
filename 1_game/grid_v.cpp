@@ -86,19 +86,10 @@ template<typename PRIM, typename KIND>void SetTexture( PRIM& p, KIND k ){
 	}
 }
 
-void GRID_V::SetFloor( GRID_KIND_FLOOR k ){ SetTexture( f, k );	}
-void GRID_V::SetCeil(  GRID_KIND_CEIL  k ){ SetTexture( c, k );	}
-void GRID_V::SetWall( DIX d, GRID_KIND_WALL k ){
+void GRID_V::Floor( GRID_KIND_FLOOR k ){ SetTexture( f, k );	}
+void GRID_V::Ceil(  GRID_KIND_CEIL  k ){ SetTexture( c, k );	}
+void GRID_V::Wall( DIX d, GRID_KIND_WALL k ){ SetTexture( w[d], k );	}
 
-	switch ( d ){
-	default:return;
-	case DIX_N:break;
-	case DIX_S:break;
-	case DIX_E:break;
-	case DIX_W:break;
-	}
-
-	SetTexture( w[d], k );
-}
+void GRID_V::Corner( UINT ){}
 
 // End Of File

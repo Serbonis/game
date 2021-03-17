@@ -157,7 +157,64 @@ auto SCENE_FRAME::GetActor( UINT n ) const->std::weak_ptr<const ACTOR_X>{
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_FRAME::GenerateMinimap( void ){}
+template<typename TYPE>void GenerateMapper( TYPE& mapper,
+											const std::shared_ptr<SCENE_GRID> grid,
+											const std::vector<UINT>& FLOOR_COLOR,
+											const std::vector<UINT>& WALL_COLOR )
+{
+	const auto	s = grid->Size();
+
+	mapper->Size( s.w, s.h );
+
+	for ( auto i = 0UL; i < s.h; i++ ) {
+		for ( auto j = 0UL; j < s.w; j++ ) {
+			switch ( const auto f = grid->GetFloor( j, i ) ) {
+			default:break;
+			case GRID_KIND_FLOOR::Normal: mapper->Floor( j, i, FLOOR_COLOR[lattice( j, i )] ); break;
+			case GRID_KIND_FLOOR::Portal: ( void )f; break;	//mapper->Floor( j, i, f );
+			case GRID_KIND_FLOOR::Block: mapper->Floor( j, i, WALL_COLOR[0] ); break;
+			}
+
+			const GRID_KIND_WALL	w[] =
+				{
+				 grid->GetWall( j, i, DIX_N ),
+				 grid->GetWall( j, i, DIX_E ),
+				 grid->GetWall( j, i, DIX_S ),
+				 grid->GetWall( j, i, DIX_W ),
+				};
+
+			for ( auto d = 0UL; d < DIX_MAX; d++ ) {
+				switch ( w[d] ) {
+				default:break;
+				case GRID_KIND_WALL::Normal:
+					mapper->Wall( j, i, ( DIX )d, WALL_COLOR[0] );
+					break;
+				}
+			}
+			mapper->Corner( j, i, GRID_KIND_WALL_Exist( w ), WALL_COLOR[0] );
+		}
+	}
+}
+
+//----------------------------------------
+//----------------------------------------
+void SCENE_FRAME::GenerateMinimap( void ){
+
+	minimap->Clear();
+
+	const auto	o = object.lock();
+	const auto	g = o->grid;
+
+	GenerateMapper( minimap, g, FRAME_MINIMAP_FLOOR_COLOR, FRAME_MINIMAP_WALL_COLOR );
+
+	const auto	[w,h] = g->Size();
+	const auto	[x,y] = g->Offset();
+
+	minimap->Move( w/2 + x, h/2 + y );
+
+	minimap->MapName( g->MapName() );
+}
+
 void SCENE_FRAME::DestroyMinimap(  void ){}
 
 //----------------------------------------
@@ -167,47 +224,9 @@ void SCENE_FRAME::GenerateRadar( void ){
 	radar->Clear();
 
 	const auto	o = object.lock();
+	const auto	g = o->grid;
 
-	// GRID
-	{
-		const auto	g = o->grid;
-		const auto	s = g->Size();
-
-		radar->Size( s.w, s.h );
-
-		for ( auto i = 0UL; i < s.h; i++ ) {
-			for ( auto j = 0UL; j < s.w; j++ ) {
-				switch ( const auto f = g->GetFloor( j, i ) ) {
-				default:break;
-				case GRID_KIND_FLOOR::Normal:
-					radar->Floor( j, i, FRAME_RADAR_FLOOR_COLOR[lattice( j, i )] );
-					break;
-
-				case GRID_KIND_FLOOR::Portal:
-					( void )f;
-					//radar->Floor( j, i, f );
-					break;
-				}
-
-				const GRID_KIND_WALL	w[] =
-					{
-					 g->GetWall( j, i, DIX_N ),
-					 g->GetWall( j, i, DIX_E ),
-					 g->GetWall( j, i, DIX_S ),
-					 g->GetWall( j, i, DIX_W ),
-					};
-
-				for ( auto d = 0UL; d < DIX_MAX; d++ ) {
-					switch ( w[d] ) {
-					default:break;
-					case GRID_KIND_WALL::Normal:
-						radar->Wall( j, i, ( DIX )d, FRAME_RADAR_WALL_COLOR[0] );
-						break;
-					}
-				}
-			}
-		}
-	}
+	GenerateMapper( radar, g, FRAME_RADAR_FLOOR_COLOR, FRAME_RADAR_WALL_COLOR );
 }
 
 void SCENE_FRAME::DestroyRadar(  void ){}

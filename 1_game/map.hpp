@@ -9,19 +9,21 @@
 //----------------------------------------
 struct MAP_DATA {
 	// MAP
+	const std::string	name;
+
 	struct {
 		const std::string*		data;
 		std::pair<UINT,UINT>	size;
-		std::pair<UINT,UINT>	offset;
+		std::pair<int,int>		offset;
 	}	map;
 
 	// PLAYER
 	struct {
-		std::pair<UINT,UINT>	start;
-		UINT					direction;
+		const struct PLAYER_DATA*	data;
+		UINT						number;
 	}	player;
 
-	// PLAYER
+	// ENEMY
 	struct {
 		const struct ENEMY_DATA*	data;
 		UINT						number;
@@ -50,6 +52,15 @@ struct GRID_DATA {
 };
 
 //----------------------------------------
+// PLAYER DATA
+//----------------------------------------
+struct PLAYER_DATA {
+	std::pair<UINT,UINT>	position;
+	opal::DIM				offset;
+	UINT					direction;
+};
+
+//----------------------------------------
 // ENEMY DATA
 //----------------------------------------
 #include "enemy_k.hpp"
@@ -58,6 +69,7 @@ struct GRID_DATA {
 struct ENEMY_DATA {
 	ENEMY_KIND				kind;
 	std::pair<UINT,UINT>	position;
+	opal::DIM				offset;
 	UINT					direction;
 	UINT					stat;
 };

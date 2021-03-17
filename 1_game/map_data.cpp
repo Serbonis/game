@@ -27,26 +27,36 @@ namespace SCENE_GAME {
 namespace MAP_DATA000 {
 	const std::string	map[] =
 		{
-		 "・━・━・",
-		 "┃□│□┃",
-		 "・─・─・",
-		 "┃□│□┃",
-		 "・─・─・",
-		 "┃□│□┃",
-		 "・━・━・",
+		 "・━・━・━・",
+		 "┃□┃◎│□┃",
+		 "・━・━・─・",
+		 "┃□┃×┃□┃",
+		 "・─・━・─・",
+		 "┃□│□│□┃",
+		 "・─・─・━・",
+		 "┃□┃□┃　│",
+		 "・━・━・─・",
 		};
+
+	const PLAYER_DATA	player_data[]
+	= {
+	   { {  0,  3 }, DIM_0, DIX_N },
+	   { {  1,  3 }, DIM_0, DIX_N },
+	};
 
 	const ENEMY_DATA	enemy_data[]
 	= {
-	   { ENEMY_KIND::Mummy, { 0, 0 }, DIX_S, ENEMY_STAT::Awake  },
-	   { ENEMY_KIND::Mummy, { 1, 0 }, DIX_S, ENEMY_STAT::Awake  },
+	   { ENEMY_KIND::Mummy, { 0, 0 }, DIM_0, DIX_S, ENEMY_STAT::Awake  },
+	   { ENEMY_KIND::Mummy, { 2, 0 }, DIM_8, DIX_S, ENEMY_STAT::Awake  },
+	   { ENEMY_KIND::Mummy, { 2, 0 }, DIM_6, DIX_S, ENEMY_STAT::Awake  },
 	};
 
 	const MAP_DATA	map_data
 	= {
-	   { map, {  2, 3 }, { 0, 0 } },
-	   { {  0,  2 }, DIX_N },
-	   { enemy_data, ARRAYSIZE( enemy_data ) },
+	   "SAMPLE",
+	   { map, {  3, 4 }, { 0, 0 } },
+	   { player_data, ARRAYSIZE( player_data ) },
+	   { enemy_data,  ARRAYSIZE( enemy_data  ) },
 	};
 }
 
@@ -81,7 +91,22 @@ namespace MAP_DATA001 {
 		 "　　　　　　・━・　　",
 		};
 
-	const MAP_DATA	map_data = { { map, {  5,11 }, { 0, 0 } }, { {  3, 10 }, DIX_N }, {} };
+	const PLAYER_DATA	player_data[]
+	= {
+	   { {  3, 10 }, DIM_0, DIX_N },
+	   { {  3, 10 }, DIM_0, DIX_N },
+	};
+
+	const ENEMY_DATA	enemy_data[]
+	= {};
+
+	const MAP_DATA	map_data
+	= {
+	   "ENTRANCE",
+	   { map, {  5, 11 }, { 0, 0 } },
+	   { player_data, ARRAYSIZE( player_data ) },
+	   { enemy_data,  ARRAYSIZE( enemy_data  ) },
+	};
 }
 
 // End Of File

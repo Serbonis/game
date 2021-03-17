@@ -95,9 +95,9 @@ auto SCENE_ENEMY::Name( ENEMY_KIND k )->std::string{
 
 //----------------------------------------
 //----------------------------------------
-void SCENE_ENEMY::ObjPosition( std::shared_ptr<ENEMY_X> e, int x, int y ){
+void SCENE_ENEMY::ObjPosition( std::shared_ptr<ENEMY_X> e, int x, int y, DIM m ){
 
-	Game::ObjPosition( e, x, y );
+	Game::ObjPosition( e, x, y, m );
 
 	e->SetPosition();
 }
